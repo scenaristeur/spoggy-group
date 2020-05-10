@@ -17,7 +17,7 @@ class VisToolView extends LitElement {
     super();
     this.name = "VisTool"
     this.debug = false
-    this.params = {tool:"NoTool", data: {}}
+    this.params = {tool:"addNode", data: {}}
     this.nodeTypes = ["Organization", "People", "Group", "Service", "Role", "Graph"]
     this.nodeType = this.nodeTypes[0]
   }

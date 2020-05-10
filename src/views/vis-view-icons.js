@@ -65,7 +65,6 @@ class VisView extends LitElement {
   render(){
     return html`
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
- <link href="css/fontawesome/css/all.css" rel="stylesheet">
     <link href="css/vis-network.min.css" rel="stylesheet">
     <style>
     #mynetwork {
@@ -149,7 +148,7 @@ class VisView extends LitElement {
             highlight: {border: '#000000', background:'#FFFFFF'}
           }
         },
-      groups: {
+        groups: {
                  usergroups: {
                    shape: 'icon',
                    icon: {
@@ -171,7 +170,7 @@ class VisView extends LitElement {
                    }
                  }
                },
-    /*    manipulation: {
+        manipulation: {
 
           addNode: function (data, callback) {
             // filling in the popup DOM elements
@@ -194,7 +193,7 @@ class VisView extends LitElement {
             //  app.shadowRoot.getElementById('node-operation').innerHTML = "Editer un noeud ";
             app.editEdge(data, callback);
           },
-        addEdge: function (data, callback) {
+          /*addEdge: function (data, callback) {
           if (data.from == data.to) {
           var r = confirm("Etes-vous certain de vouloir connecter le noeud sur lui-même?");
           if (r != true) {
@@ -210,8 +209,9 @@ class VisView extends LitElement {
     app.shadowRoot.getElementById('edge-operation').innerHTML = "Editer un lien";
     app.editEdgeWithoutDrag(data,callback);
   }
+}*/
 }
-},*/
+,
 physics:{
   enabled: true,
   barnesHut: {

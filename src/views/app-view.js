@@ -6,35 +6,24 @@ class AppView extends LitElement {
   static get properties() {
     return {
       name: {type: String},
-      debug: {type: Boolean},
-      config: {type: Object}
     };
   }
 
   constructor() {
     super();
     this.name = "App"
-    this.debug = false
-    this.config = {}
   }
 
   render(){
     return html`
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link href="css/fontawesome/css/all.css" rel="stylesheet">
-
-    <div ?hidden = "${!this.debug}">
-    Hello from<b>${this.name}</b><br>
-    debug : ${this.debug}<br>
-    config : ${JSON.stringify(this.config)}<br>
-    </div>
 
     <div class="container-fluid">
-    Hello <b>${this.name}</b> from app-element
-
-    <vis-view>
-    Loading VIS
-    </vis-view>
+    <login-element name="Login"></login-element>
+    <div class="row">
+    <vis-view name="Vis">Loading VIS</vis-view>
+    <vis-tool-view name="VisTool">Vis Tool</vis-tool-view>
+    </div>
 
     </div>
     `;

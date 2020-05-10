@@ -14,7 +14,7 @@ class AppView extends LitElement {
   constructor() {
     super();
     this.name = "App"
-    this.debug = true
+    this.debug = false
     this.config = {}
   }
 
@@ -35,7 +35,7 @@ class AppView extends LitElement {
     <vis-view>
     Loading VIS
     </vis-view>
-    
+
     </div>
     `;
   }

@@ -47,6 +47,7 @@
     "lit-element": "^2.3.1",
     "rdf-namespaces": "^1.8.0",
     "solid-auth-client": "^2.4.1",
-    "solid-file-client": "^1.0.5"
+    "solid-file-client": "^1.0.5",
+    "vis-network": "^7.6.4"
   }
 }

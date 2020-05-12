@@ -22,7 +22,7 @@ class AppView extends LitElement {
     <login-element name="Login"></login-element>
     <div class="row">
     <vis-view name="Vis">Loading VIS</vis-view>
-    <vis-tool-view name="VisTool">Vis Tool</vis-tool-view>
+<!--    <vis-tool-view name="VisTool">Vis Tool</vis-tool-view> -->
     </div>
 
     </div>

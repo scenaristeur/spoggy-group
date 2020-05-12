@@ -8,4 +8,4 @@ import './views/login-element.js';
 
 //VIS
 import './views/vis-view.js';
-import './views/vis-tool-view.js';
+//import './views/vis-tool-view.js';

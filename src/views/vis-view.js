@@ -8,7 +8,8 @@ class VisView extends LitElement {
       name: {type: String},
       debug: {type: Boolean},
       config: {type: Object},
-      selected: {type: Object}
+      selected_nodes: {type: Array},
+      selected_edges: {type: Array}
     };
   }
 
@@ -18,7 +19,8 @@ class VisView extends LitElement {
     this.name = "Vis"
     this.debug = true
     this.config = {}
-    this.selected = {}
+    this.selected_nodes = []
+    this.selected_edges = []
     var nodes = new vis.DataSet([
       {
         id: 1,
@@ -185,7 +187,19 @@ class VisView extends LitElement {
     <div id="mynetwork">Network</div>
     </div>
     <div>
-    <vis-selected-view name="VisSelected" .selected="${this.selected}">Loading Selected</vis-selected-view>
+
+    ${this.selected_nodes.map((n, i) =>
+      html`
+      <node-view name="${'Node_'+i}" .node="${n}"></node-view>
+      `
+    )}
+
+    ${this.selected_edges.map((e, i) =>
+      html`
+      <edge-view name="${'Edge_'+i}" .edge="${e}"></edge-view>
+      `
+    )}
+
     </div>
     </div>
     `;
@@ -205,8 +219,11 @@ class VisView extends LitElement {
       if (message.hasOwnProperty("action")){
         //  console.log(message)
         switch(message.action) {
-          case "configChanged":
-          app.configChanged(message.config)
+          case "nodeUpdate":
+          app.nodeUpdate(message.node)
+          break;
+          case "edgeUpdate":
+          app.edgeUpdate(message.edge)
           break;
           default:
           console.log("Unknown action ",message)
@@ -215,6 +232,19 @@ class VisView extends LitElement {
     };
     this.init()
   }
+
+  nodeUpdate(node){
+  //  console.log(node)
+    this.network.body.data.nodes.update(node)
+  }
+
+  edgeUpdate(edge){
+    console.log(edge)
+    this.network.body.data.edges.update(edge)
+  }
+
+
+
 
   init(){
     let app = this
@@ -408,18 +438,18 @@ class VisView extends LitElement {
         }
 
         this.network = new vis.Network(container, this.data, options);
-        //this.network.setOptions(opt)
 
-        this.network.on("selectNode", function (selected) {
-          app.selected = selected
-          //          this.agent.send("VisSelected", {action: "selectedChanged", selected: selected}})
+        this.network.on("selectNode", function (params) {
+          console.log(params)
+          app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
+          app.selected_edges =  app.network.body.data.edges.get(params.edges)
         })
 
-        this.network.on("selectEdge", function (selected) {
-          app.selected = selected
-          //        this.agent.send("VisSelected", {action: "selectedChanged", selected: selected}})
+        this.network.on("selectEdge", function (params) {
+          console.log(params)
+          app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
+          app.selected_edges =  app.network.body.data.edges.get(params.edges)
         })
-
       }
       ///////////////////////////
 

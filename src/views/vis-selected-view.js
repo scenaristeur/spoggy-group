@@ -1,30 +1,47 @@
 import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
 
-class AppView extends LitElement {
+class VisSelectedView extends LitElement {
 
   static get properties() {
     return {
       name: {type: String},
+      debug: {type: Boolean},
+      selected: {type: Object}
     };
   }
 
   constructor() {
     super();
-    this.name = "App"
+    this.name = "VisSelected"
+    this.debug = true
+    this.selected = {nodes:[], edges: []}
   }
 
   render(){
     return html`
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
-  <div class="row">
-    <vis-view name="Vis">Loading VIS</vis-view>
-<!--    <vis-tool-view name="VisTool">Vis Tool</vis-tool-view> -->
+
+    ${this.selected.nodes.map(n =>
+      html`- node : ${n}<br>`
+    )}
+    ${this.selected.edges.map(e =>
+      html`- edge : ${e}<br>`
+    )}
     </div>
 
+    <div ?hidden = "${!this.debug}">
+    <hr>
+    Hello from<b>${this.name}</b><br>
+    debug : ${this.debug}<br>
+    selected :
+    <pre>${JSON.stringify(this.selected, undefined, 2)}</pre><br>
     </div>
+
+
     `;
   }
 
@@ -54,4 +71,4 @@ class AppView extends LitElement {
 
 }
 
-customElements.define('app-view', AppView);
+customElements.define('vis-selected-view', VisSelectedView);

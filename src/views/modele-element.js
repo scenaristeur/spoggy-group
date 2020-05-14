@@ -23,15 +23,20 @@ class ModeleElement extends LitElement {
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
-    <div ?hidden = "${!this.debug}">
-    Hello from<b>${this.name}</b><br>
-    debug : ${this.debug}<br>
-    config : ${JSON.stringify(this.config)}<br>
-    </div>
-
     <div class="container-fluid">
     Hello <b>${this.name}</b> from app-element
     </div>
+    
+
+    <div ?hidden = "${!this.debug}">
+    <hr>
+    Hello from<b>${this.name}</b><br>
+    debug : ${this.debug}<br>
+    config :
+    <pre> ${JSON.stringify(this.config, undefined, 2)}</pre><br>
+    </div>
+
+
     `;
   }
 

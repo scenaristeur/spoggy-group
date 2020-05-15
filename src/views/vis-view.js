@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
+// import / export, voir https://github.com/scenaristeur/spoggy-simple/blob/a9c73eec43e37c736fef656a72c948dd1c453886/js/import-export.js
 
 class VisView extends LitElement {
 
@@ -228,12 +229,38 @@ class VisView extends LitElement {
           case "edgeUpdate":
           app.edgeUpdate(message.edge)
           break;
+          case "triplesChanged":
+          app.triplesChanged(message.triples)
+          break;
           default:
           console.log("Unknown action ",message)
         }
       }
     };
     this.init()
+  }
+
+
+  triplesChanged(triples){
+    let app = this
+    this.new()
+    triples.forEach((t, i) => {
+      let n_sub = {id: t.subject.id, label: app.localName(t.subject.id), title: t.predicate.id}
+      app.addNodeIfNotExist(n_sub)
+      let n_obj = {id: t.object.id, label: app.localName(t.object.id), title: t.predicate.id}
+      app.addNodeIfNotExist(n_obj)
+      let edge = {from: n_sub.id, to: n_obj.id, label: app.localName(t.predicate.id), title: t.predicate.id}
+      app.network.body.data.edges.update(edge)
+    });
+
+  }
+
+
+  localName(strPromise){
+    let str = `${strPromise}`
+    var ln = str.substring(str.lastIndexOf('#')+1);
+    ln == str ? ln = str.substring(str.lastIndexOf('/')+1) : "";
+    return ln
   }
 
   nodeUpdate(node){
@@ -246,6 +273,32 @@ class VisView extends LitElement {
     this.network.body.data.edges.update(edge)
   }
 
+  addNodeIfNotExist(data){
+    let network = this.network
+    var existNode = false;
+    //console.log(data);
+    var nodeId;
+    try{
+      existNode = network.body.data.nodes.get({
+        filter: function(n){
+          return (n.id == data.id || (n.label == data.label)); //  || n.title == data.label
+        }
+      });
+      //console.log(existNode);
+      if (existNode.length == 0){
+        //  console.log("n'existe pas")
+        nodeId =   network.body.data.nodes.add(data)[0];
+      }else{
+        //  console.log("existe")
+        delete data.x;
+        delete data.y
+        nodeId =  network.body.data.nodes.update(data)[0];
+      }
+    }
+    catch (err){
+      console.log(err);
+    }
+  }
 
 
 

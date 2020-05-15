@@ -28,6 +28,26 @@ class AppView extends LitElement {
     `;
   }
 
+/*function recupParams(){
+  //console.log(window.location)
+  var url = window.location.search+window.location.hash;  // pour catcher les /card#me
+  var params = (function(a) {
+    if (a == "") return {};
+    var b = {};
+    for (var i = 0; i < a.length; ++i)
+    {        var p=a[i].split('=', 2);
+    if (p.length == 1)
+    b[p[0]] = "";
+    else
+    b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+  }
+  return b;
+})(url.substr(1).split('&'));
+return params;
+}*/
+
+
+
   firstUpdated(){
     var app = this;
     this.agent = new HelloAgent(this.name);

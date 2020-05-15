@@ -186,7 +186,10 @@ class VisView extends LitElement {
     <div>
     <div id="mynetwork">Network</div>
     </div>
-    <div>
+    <div class="col">
+    <browser-view name="Browser"></browser-view>
+    <input-view name="Input"></input-view>
+
 
     ${this.selected_nodes.map((n, i) =>
       html`
@@ -234,7 +237,7 @@ class VisView extends LitElement {
   }
 
   nodeUpdate(node){
-  //  console.log(node)
+    //  console.log(node)
     this.network.body.data.nodes.update(node)
   }
 

@@ -18,8 +18,8 @@ class LoginElement extends LitElement {
   constructor() {
     super();
     this.webId = null
-  //  this.destinataires = ['App','Config', 'ConfigGet', 'Fab', 'Post', 'PostTabs', 'Profile', 'ProfileCartouche', 'Friends']
-    this.destinataires = ['App', 'Store','Fab', 'Post', 'PostTabs']
+    //  this.destinataires = ['App','Config', 'ConfigGet', 'Fab', 'Post', 'PostTabs', 'Profile', 'ProfileCartouche', 'Friends']
+    this.destinataires = ['Browser']
 
   }
 

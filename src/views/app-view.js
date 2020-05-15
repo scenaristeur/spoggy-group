@@ -19,9 +19,9 @@ class AppView extends LitElement {
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
 
     <div class="container-fluid">
-  <div class="row">
+    <div class="row">
     <vis-view name="Vis">Loading VIS</vis-view>
-<!--    <vis-tool-view name="VisTool">Vis Tool</vis-tool-view> -->
+    <!--    <vis-tool-view name="VisTool">Vis Tool</vis-tool-view> -->
     </div>
 
     </div>

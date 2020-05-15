@@ -211,7 +211,7 @@ class VisView extends LitElement {
 
   new(){
     this.data.nodes.clear()
-    //this.data.edges.clear()
+    this.data.edges.clear()
   }
 
   firstUpdated(){
@@ -232,6 +232,9 @@ class VisView extends LitElement {
           case "triplesChanged":
           app.triplesChanged(message.triples)
           break;
+          case "addTriple":
+          app.addTriple(message.triple)
+          break;
           default:
           console.log("Unknown action ",message)
         }
@@ -240,18 +243,37 @@ class VisView extends LitElement {
     this.init()
   }
 
+  addTriple(t){
+    // from input-view
+    // TODO addEdgeIfnotExist
+    let n_sub = {id: t.subject, label: this.localName(t.subject), title: t.subject}
+    this.addNodeIfNotExist(n_sub)
+    let n_obj = {id: t.object, label: this.localName(t.object), title: t.object}
+    this.addNodeIfNotExist(n_obj)
+    let edge = {from: n_sub.id, to: n_obj.id, label: this.localName(t.predicate), title: t.predicate}
+    this.network.body.data.edges.update(edge)
+  }
 
-  triplesChanged(triples){
+
+  triplesChanged(triples, clear=false){
+    //from tripledoc in browser-view
+    // TODO addEdgeIfnotExist
+    clear ==  true ? this.new() : ""
     let app = this
-    this.new()
-    triples.forEach((t, i) => {
-      let n_sub = {id: t.subject.id, label: app.localName(t.subject.id), title: t.predicate.id}
-      app.addNodeIfNotExist(n_sub)
-      let n_obj = {id: t.object.id, label: app.localName(t.object.id), title: t.predicate.id}
-      app.addNodeIfNotExist(n_obj)
-      let edge = {from: n_sub.id, to: n_obj.id, label: app.localName(t.predicate.id), title: t.predicate.id}
-      app.network.body.data.edges.update(edge)
-    });
+
+    if (triples.length != 0){
+      triples.forEach((t, i) => {
+        let n_sub = {id: t.subject.id, label: app.localName(t.subject.id), title: t.subject.id}
+        app.addNodeIfNotExist(n_sub)
+        let n_obj = {id: t.object.id, label: app.localName(t.object.id), title: t.object.id}
+        app.addNodeIfNotExist(n_obj)
+        let edge = {from: n_sub.id, to: n_obj.id, label: app.localName(t.predicate.id), title: t.predicate.id}
+        app.network.body.data.edges.update(edge)
+      });
+
+    }else{
+      alert("Are really sure that this file contains triples ? :-/")
+    }
 
   }
 

@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
 import * as SolidFileClient from "solid-file-client"
 import { fetchDocument } from "tripledoc";
+import { namedNode } from '@rdfjs/data-model';
 
 class BrowserView extends LitElement {
 
@@ -12,7 +13,10 @@ class BrowserView extends LitElement {
       storage: {type: String},
       path: {type: String},
       last: {type: String},
-      folder: {type: Object}
+      folder: {type: Object},
+      folderName: {type: String},
+      fileName: {type: String},
+      createHidden: {type: Boolean}
     };
   }
 
@@ -24,7 +28,10 @@ class BrowserView extends LitElement {
     this.path = ""
     this.last = ""
     this.folder = {folders:[], files: []}
+    this.folderName = ""
+    this.fileName = ""
     this.fc = new SolidFileClient(solid.auth)
+    this.createHidden = true
   }
 
   render(){
@@ -33,20 +40,38 @@ class BrowserView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid" ?hidden="${this.path.length == 0}">
-    <div class="btn-group" role="group" aria-label="Basic example">
+    <div class="btn-group  container-fluid" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-secondary" @click="${this.up}"><i class="fas fa-arrow-up" @click="${this.up}"></i> </button>
     <button type="button" class="btn btn-secondary" @click="${this.prec}"><i class="fas fa-arrow-left" @click="${this.prec}"></i></button>
-    <button type="button" class="btn btn-secondary" disabled @click="${this.new_folder}"><i class="fas fa-folder-plus" @click="${this.new_folder}"></i></button>
-    <button type="button" class="btn btn-secondary" disabled @click="${this.new_file}"><i class="fas fa-file" @click="${this.new_file}"></i></button>
-    <button type="button" class="btn btn-secondary" disabled @click="${this.file_import}"><i class="fas fa-file-import" @click="${this.file_import}"></i></button>
-    <button type="button" class="btn btn-secondary" disabled @click="${this.solid}"><i class="fas fa-user-friends" @click="${this.solid}"></i> solid friends...</button>
+    <button type="button" class="btn btn-secondary" input_type="foldername" @click="${this.new}"><i class="fas fa-folder-plus" input_type="foldername"  @click="${this.new}"></i></button>
+    <button type="button" class="btn btn-secondary" input_type="filename" @click="${this.new}"><i class="fas fa-file" input_type="filename" @click="${this.new}"></i></button>
+    <button type="button" class="btn btn-secondary" input_type="file" @click="${this.new}"><i class="fas fa-file-upload" input_type="file" @click="${this.new}"></i></button>
+    <button type="button" class="btn btn-secondary" disabled @click="${this.solid}"><i class="fas fa-user-friends" @click="${this.solid}"></i> solid</button>
     </div>
     <br>
-    <div class="btn-group" role="group" aria-label="Basic example">
+    <div class="btn-group container-fluid" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-outline-secondary" disabled>${this.path}</button>
     </div>
 
 
+    <div  ?hidden="${this.createHidden}"
+    class="btn-group container-fluid" role="group" aria-label="new">
+    <div class="input-group mb-3">
+    <input type="text"
+    id="create_input" class="form-control"
+    placeholder="Folder or File name"
+    aria-label="Folder or File name"
+    aria-describedby="basic-addon2">
+    <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="button" @click="${this.create}">Create</button>
+    <i class="fas fa-times btn btn-outline-secondary" @click="${this.closeCreateInput}"></i>
+    </div>
+    </div>
+    </div>
+
+
+
+    <div style="height: 30vh; width:100%; overflow: auto">
     <ul class="list-group">
     ${this.folder.folders.map((f, i) =>
       html`
@@ -70,6 +95,7 @@ class BrowserView extends LitElement {
       </div>
 
       <div class="btn-group" role="group">
+      <a href="${f.url}" class="btn btn-secondary" target="_blank"><i class="fas fa-external-link-alt"></i></a>
       <button type="button" class="btn btn-secondary" disabled><i class="fas fa-file-download"></i></button>
       <button type="button" class="btn btn-secondary"disabled><i class="fas fa-file-export"></i></button>
       </div>
@@ -79,8 +105,62 @@ class BrowserView extends LitElement {
     )}
     </ul>
     </div>
+    </div>
     `;
   }
+
+  /*
+  TODO AFTER CONFIRM
+  https://github.com/jeff-zucker/solid-file-client#deletefile-fileurl-options-
+  deleteFile( fileURL, options )
+  deleteFolder( folderURL )
+  */
+  new(e){
+    this.createHidden = false
+    let input_type = e.target.getAttribute("input_type")
+    this.shadowRoot.getElementById("create_input").setAttribute("input_type", input_type)
+    this.shadowRoot.getElementById("create_input").setAttribute("type", input_type == "file" ? "file" : "text")
+
+    //  this.shadowRoot.getElementById("create_input").placeholder( type)
+  }
+
+  async create(){
+    let name =  this.shadowRoot.getElementById("create_input").value.trim()
+    if(name.length > 0){
+      let input_type =   this.shadowRoot.getElementById("create_input").getAttribute("input_type")
+      console.log(name, input_type)
+      let create_path = this.path+name
+
+      switch (input_type) {
+        case "filename":
+        create_path = !create_path.endsWith(".ttl") ? create_path+".ttl" : create_path
+        console.log(create_path)
+        await this.fc.createFile(create_path,"","text/turtle").catch(err => console.error(`Error: ${err}`))
+        break;
+        case "foldername":
+        console.log(create_path)
+        await this.fc.createFolder(create_path).catch(err => console.error(`Error: ${err}`))
+        break;
+        case "filename":
+        console.log("TODO : upload")
+        break;
+        default:
+
+      }
+      this.createHidden = true
+      this.updateFolders()
+      this.shadowRoot.getElementById("create_input").value = ""
+    }else{
+      alert ("I can't create a folder or a file with a blank name !")
+    }
+  }
+
+  closeCreateInput(){
+    this.createHidden = true
+  }
+
+
+
 
   changePath(e){
     //    console.log(e)
@@ -97,17 +177,18 @@ class BrowserView extends LitElement {
   }
 
   async getFile(url){
-
-    if(url.endsWith(".ttl") || url.endsWith("/card")){
+    try{
       const doc = await fetchDocument(url);
-      console.log("doc",doc)
+
+      //  console.log("doc",doc)
       let triples = doc.getTriples()
       console.log("triples",triples)
       //  let vis_network = this.statements2vis(triples)
       this.agent.send("Vis", {action: "triplesChanged", triples: triples})
+      this.currentFile = url
     }
-    else{
-      alert("this file extension is not treated yet, come back soon ;-)")
+    catch(e){
+      alert("Oh i've got a problem to read this file :-(")
     }
   }
 
@@ -289,7 +370,15 @@ class BrowserView extends LitElement {
     console.log("folder",this.folder)
   }
 
-
+  async addTriple(t){
+    console.log(this.currentFile)
+    let subject = this.currentFile+"#"+t.subject
+    let predicate = this.currentFile+"#"+t.predicate
+    let object = this.currentFile+"#"+t.object
+    await solid.data[subject][predicate].add(namedNode(object))
+    this.agent.send("Vis", {action: "addTriple", triple: {subject: subject, predicate: predicate, object: object} })
+  }
+  
   up(){
     this.path = this.folder.parent
     this.updateFolders()
@@ -312,6 +401,9 @@ class BrowserView extends LitElement {
         switch(message.action) {
           case "webIdChanged":
           app.webIdChanged(message.webId)
+          break;
+          case "addTriple":
+          app.addTriple(message.triple)
           break;
           default:
           console.log("Unknown action ",message)

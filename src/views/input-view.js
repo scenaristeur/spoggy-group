@@ -15,7 +15,7 @@ class InputView extends LitElement {
   constructor() {
     super();
     this.name = "Input"
-    this.debug = true
+    this.debug = false
     this.config = {}
     this.triples = []
   }
@@ -45,13 +45,14 @@ class InputView extends LitElement {
       <div class="row">
       <div class="container-fluid">
       <div class="input-group mb-3">
-      <div class="input-group-prepend">
+      <!--<div class="input-group-prepend">
       <span class="input-group-text" id="input-label">?</span>
-      </div>
+      </div>-->
       <input type="text" class="form-control"
       id="tripleInput"
       placeholder="'Subject predicate Object,' or command starting by '/'"
       aria-label="'Subject predicate Object,' or command starting by '/'"
+      title="'Subject predicate Object,' or command starting by '/'"
       aria-describedby="input-label"
       @keydown=${this.keydown}>
       <div class="input-group-append">
@@ -211,6 +212,8 @@ class InputView extends LitElement {
         console.log(this.triples)
         console.log(result)
 
+        this.agent.send("Browser", {action: "addTriple", triple: result.value})
+  
       }else{
         alert ("Triple must end with ',' or ';' or '.'")
       }

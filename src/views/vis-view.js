@@ -180,29 +180,41 @@ class VisView extends LitElement {
 
 
 
-    <button class="btn btn-primary" @click="${this.new}">New</button>
-    <login-element name="Login"></login-element>
+
 
     <div class="row">
     <div>
     <div id="mynetwork">Network</div>
     </div>
     <div class="col">
-    <browser-view name="Browser"></browser-view>
+    <button class="btn btn-primary" @click="${this.new}">New</button>
+    <login-element name="Login"></login-element>
     <input-view name="Input"></input-view>
 
-
+    <div ?hidden="${this.selected_nodes.length == 0}">
+    <hr>
+    <b>${this.selected_nodes.length} nodes.</b>
+    <hr>
     ${this.selected_nodes.map((n, i) =>
       html`
       <node-view name="${'Node_'+i}" .node="${n}"></node-view>
       `
     )}
+    </div>
 
+    <div ?hidden="${this.selected_edges.length == 0}">
+    <hr>
+    <b>${this.selected_edges.length} edges.</b>
+    <hr>
     ${this.selected_edges.map((e, i) =>
       html`
       <edge-view name="${'Edge_'+i}" .edge="${e}"></edge-view>
       `
     )}
+    </div>
+
+    <browser-view name="Browser"></browser-view>
+
 
     </div>
     </div>
@@ -472,18 +484,18 @@ class VisView extends LitElement {
               nodeDistance: 120,
               damping: 0.09
             },
-            maxVelocity: 500, //50
-            minVelocity: 1, //0.1
+            //maxVelocity: 500, //50
+            //minVelocity: 1, //0.1
             solver: 'repulsion',
-            stabilization: {
+            /*stabilization: {
               enabled: true,
               iterations: 1000,
               updateInterval: 100,
               onlyDynamicEdges: false//,
               //  fit: true
-            },
-            timestep: 0.5,
-            adaptiveTimestep: true
+            },*/
+            //timestep: 0.5,
+            //adaptiveTimestep: true
           },
           manipulation: {
             // https://github.com/almende/vis/blob/master/examples/network/other/manipulationEditEdgeNoDrag.html
@@ -524,6 +536,16 @@ class VisView extends LitElement {
         })
 
         this.network.on("selectEdge", function (params) {
+          console.log(params)
+          app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
+          app.selected_edges =  app.network.body.data.edges.get(params.edges)
+        })
+        this.network.on("deselectNode", function (params) {
+          console.log(params)
+          app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
+          app.selected_edges =  app.network.body.data.edges.get(params.edges)
+        })
+        this.network.on("deselectEdge", function (params) {
           console.log(params)
           app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
           app.selected_edges =  app.network.body.data.edges.get(params.edges)

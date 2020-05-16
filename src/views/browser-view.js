@@ -120,6 +120,10 @@ class BrowserView extends LitElement {
     let input_type = e.target.getAttribute("input_type")
     this.shadowRoot.getElementById("create_input").setAttribute("input_type", input_type)
     this.shadowRoot.getElementById("create_input").setAttribute("type", input_type == "file" ? "file" : "text")
+    if (input_type == "filename"){
+      this.currentFile = (new Date).toISOString().replace(/:/gi,'-').replace(/z|t/gi,' ').trim()+".ttl"
+      this.shadowRoot.getElementById("create_input").value = this.currentFile
+    }
 
     //  this.shadowRoot.getElementById("create_input").placeholder( type)
   }
@@ -135,7 +139,8 @@ class BrowserView extends LitElement {
         case "filename":
         create_path = !create_path.endsWith(".ttl") ? create_path+".ttl" : create_path
         console.log(create_path)
-        await this.fc.createFile(create_path,"","text/turtle").catch(err => console.error(`Error: ${err}`))
+        let defaultContent = "# created by Spoggy App"
+        await this.fc.createFile(create_path,defaultContent,"text/turtle").catch(err => console.error(`Error: ${err}`))
         break;
         case "foldername":
         console.log(create_path)
@@ -355,12 +360,20 @@ class BrowserView extends LitElement {
       let storage = await solid.data[webId].storage
       this.storage = `${storage}`
       //    console.log(this.storage)
-      this.path = this.storage
+      this.path = this.storage+"public/spoggy/"
+      if( !(await this.fc.itemExists(this.path)) ) {
+        await this.fc.createFolder(this.path) // only create if it doesn't already exist
+      }
+      this.currentFile = (new Date).toISOString().replace(/:/gi,'-').replace(/t/gi,'_').replace(/z/gi,'').trim()+".ttl"
+      this.shadowRoot.getElementById("create_input").value= this.currentFile
+      this.shadowRoot.getElementById("create_input").setAttribute("input_type", "filename")
+      this.createHidden = false
       this.updateFolders()
     }else{
       this.storage = ""
       this.path = ""
       this.folder = {folders:[], files: []}
+      this.currentFile = null
     }
   }
 
@@ -371,14 +384,19 @@ class BrowserView extends LitElement {
   }
 
   async addTriple(t){
-    console.log(this.currentFile)
-    let subject = this.currentFile+"#"+t.subject
-    let predicate = this.currentFile+"#"+t.predicate
-    let object = this.currentFile+"#"+t.object
-    await solid.data[subject][predicate].add(namedNode(object))
+    let subject = t.subject
+    let predicate = t.predicate
+    let object = t.object
+    if (this.currentFile != null){
+      console.log(this.currentFile)
+      subject = this.currentFile+"#"+t.subject
+      predicate = this.currentFile+"#"+t.predicate
+      object = this.currentFile+"#"+t.object
+      await solid.data[subject][predicate].add(namedNode(object))
+    }
     this.agent.send("Vis", {action: "addTriple", triple: {subject: subject, predicate: predicate, object: object} })
   }
-  
+
   up(){
     this.path = this.folder.parent
     this.updateFolders()

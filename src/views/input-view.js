@@ -7,8 +7,9 @@ class InputView extends LitElement {
     return {
       name: {type: String},
       debug: {type: Boolean},
-      config: {type: Object},
-      triples: {type: Array}
+      webId: {type: String},
+      triples: {type: Array},
+
     };
   }
 
@@ -16,7 +17,7 @@ class InputView extends LitElement {
     super();
     this.name = "Input"
     this.debug = false
-    this.config = {}
+    this.webId = null
     this.triples = []
   }
 
@@ -30,7 +31,7 @@ class InputView extends LitElement {
       <button class="btn btn-outline-secondary btn-sm" type="button">${t.subject}</button>
       <button class="btn btn-outline-secondary btn-sm" type="button">${t.predicate}</button>
       <button class="btn btn-outline-secondary btn-sm" type="button">${t.object}</button>
-      [edit] [delete]
+      <!--[edit] [delete]-->
       </div>
       </li>
       `)}
@@ -42,7 +43,8 @@ class InputView extends LitElement {
       <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
       <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
-      <div class="row">
+      <!--  <div ?hidden="${this.webId == null}"> -->
+      <div  class="row">
       <div class="container-fluid">
       <div class="input-group mb-3">
       <!--<div class="input-group-prepend">
@@ -50,9 +52,9 @@ class InputView extends LitElement {
       </div>-->
       <input type="text" class="form-control"
       id="tripleInput"
-      placeholder="'Subject predicate Object,' or command starting by '/'"
-      aria-label="'Subject predicate Object,' or command starting by '/'"
-      title="'Subject predicate Object,' or command starting by '/'"
+      placeholder="'Subject predicate Object,' ending with , ; . or - or command starting by '/'"
+      aria-label="'Subject predicate Object,' ending with , ; . or - or command starting by '/'"
+      title="'Subject predicate Object,' ending with , ; . or - or command starting by '/'"
       aria-describedby="input-label"
       @keydown=${this.keydown}>
       <div class="input-group-append">
@@ -70,29 +72,19 @@ class InputView extends LitElement {
         :html `
         <small>
         You can add triples to your Spog.<br>
-        To do so, just type 3 words in the above input and :
+        To do so, just type 3 words in the above input and ends with a :
         <ul>
-        <li>ends with a comma if you want to keep subject & predicate, </li>
-        <li>ends with a semicolon if you want to keep just the subject,</li>
-        <li>ends with a dot if you don't want to keep anything,</li>
-        <li>ends with a dash if you want that the object become the subject of the next triple.</li>
+        <li>comma (,) if you want to keep subject & predicate, </li>
+        <li>semicolon (;) if you want to keep just the subject,</li>
+        <li>dot (.) if you don't want to keep anything,</li>
+        <li>dash (-) if you want that the object become the subject of the next triple.</li>
         </ul>
         ex: Dav a Man,
         </small>
         `
       }
       </div>
-
-
-      <div ?hidden = "${!this.debug}">
-      <hr>
-      Hello from<b>${this.name}</b><br>
-      debug : ${this.debug}<br>
-      config :
-      <pre> ${JSON.stringify(this.config, undefined, 2)}</pre><br>
-      </div>
-
-
+      <!--      </div> -->
       `;
     }
 
@@ -213,9 +205,9 @@ class InputView extends LitElement {
         console.log(result)
 
         this.agent.send("Browser", {action: "addTriple", triple: result.value})
-  
+
       }else{
-        alert ("Triple must end with ',' or ';' or '.'")
+        alert ("Triple is an association of three words (subject, predicate, object) & must end with ',' or ';' or '.' or '-' ")
       }
     }
 
@@ -238,8 +230,8 @@ class InputView extends LitElement {
         if (message.hasOwnProperty("action")){
           //  console.log(message)
           switch(message.action) {
-            case "configChanged":
-            app.configChanged(message.config)
+            case "webIdChanged":
+            app.webId = message.webId
             break;
             default:
             console.log("Unknown action ",message)
@@ -248,10 +240,7 @@ class InputView extends LitElement {
       };
     }
 
-    configChanged(config){
-      this.config = config
-      console.log(this.config)
-    }
+
 
   }
 

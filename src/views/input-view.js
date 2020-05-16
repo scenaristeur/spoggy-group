@@ -96,7 +96,6 @@ class InputView extends LitElement {
       }
       console.log(new_triple)
       var res = this.catchCommand(new_triple)
-
     }
 
     catchCommand(message){
@@ -203,9 +202,7 @@ class InputView extends LitElement {
         //  this.triples.reverse()
         console.log(this.triples)
         console.log(result)
-
         this.agent.send("Browser", {action: "addTriple", triple: result.value})
-
       }else{
         alert ("Triple is an association of three words (subject, predicate, object) & must end with ',' or ';' or '.' or '-' ")
       }

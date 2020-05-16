@@ -140,6 +140,7 @@ class BrowserView extends LitElement {
         create_path = !create_path.endsWith(".ttl") ? create_path+".ttl" : create_path
         console.log(create_path)
         this.currentFile = create_path
+        this.agent.send("Vis", {action: "currentFileChanged", currentFile: this.currentFile})
         let defaultContent = "# created by Spoggy App"
         await this.fc.createFile(create_path,defaultContent,"text/turtle").catch(err => console.error(`Error: ${err}`))
 
@@ -204,6 +205,8 @@ class BrowserView extends LitElement {
     try{
       const doc = await fetchDocument(url);
       this.currentFile = url
+      this.agent.send("Vis", {action: "currentFileChanged", currentFile: this.currentFile})
+
       //  console.log("doc",doc)
       let triples = doc.getTriples()
       console.log("triples",triples)
@@ -390,12 +393,14 @@ class BrowserView extends LitElement {
       this.shadowRoot.getElementById("create_input").setAttribute("input_type", "filename")
       this.createHidden = false
       this.currentFile = this.path+newfilename
+      this.agent.send("Vis", {action: "currentFileChanged", currentFile: this.currentFile})
       this.updateFolder()
     }else{
       this.storage = ""
       this.path = ""
       this.folder = {folders:[], files: []}
       this.currentFile = null
+      this.agent.send("Vis", {action: "currentFileChanged", currentFile: this.currentFile})
     }
   }
 

@@ -12,5 +12,6 @@ import './views/browser-view.js';
 import './views/input-view.js';
 import './views/node-view.js';
 import './views/edge-view.js';
+import './views/selected-view.js';
 
 //import './views/vis-tool-view.js';

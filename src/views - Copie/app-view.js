@@ -14,8 +14,8 @@ class AppView extends LitElement {
   constructor() {
     super();
     this.name = "App"
-    this.levels = [ "Browser", "Triple", "Node"] // "Pod",, "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
-    this.level = this.levels[0]
+    this.levels = ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
+    this.level = "World"
   }
 
   render(){
@@ -24,30 +24,21 @@ class AppView extends LitElement {
 
     <div class="container-fluid">
     <div class="row">
-    <div class="col">
-    <vis-view name="Vis">Loading VIS</vis-view>
-    </div>
-    <div class="col">
-    <div class="row">
     ${this.levels.map(l =>
       html`
-      <button class="btn btn-outline-primary ${this.level == l ? "active": ""}" level="${l}" @click="${this.levelChanged}">${l}</button>
+      <button class="btn btn-outline-primary" level="${l}" @click="${this.levelChanged}">${l}</button>
       `)}
-      <login-element name="Login"></login-element>
+
       </div>
 
-
+      <div class="row">
+      <div class="col">
+      <vis-view name="Vis">Loading VIS</vis-view>
+      </div>
+      <div class="col">
+      ${this.level}
       </div>
       <!--    <vis-tool-view name="VisTool">Vis Tool</vis-tool-view> -->
-      </div>
-      <div class="row">
-      ${this.level}
-
-      <browser-view name="Browser" ?hidden="${this.level != "Browser"}"></browser-view>
-
-      <input-view name="Input" ?hidden="${this.level != "Triple"}"></input-view>
-      <selected-view name="Selected" ?hidden="${this.level != "Node"}"></selected-view>
-
       </div>
       </div>
       `;
@@ -85,8 +76,8 @@ firstUpdated(){
     if (message.hasOwnProperty("action")){
       //  console.log(message)
       switch(message.action) {
-        case "levelChanged":
-        app.level = message.level
+        case "configChanged":
+        app.configChanged(message.config)
         break;
         default:
         console.log("Unknown action ",message)

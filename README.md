@@ -8,3 +8,6 @@ https://scenaristeur.github.io/compagent/notepod-i18n/
 
 # gh-pages
 git push && git subtree push --prefix dist origin gh-pages
+
+#swiper
+https://dev.to/straversi/build-a-story-web-component-with-litelement-e59

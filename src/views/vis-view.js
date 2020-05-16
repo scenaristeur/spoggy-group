@@ -187,7 +187,7 @@ class VisView extends LitElement {
     <div id="mynetwork">Network</div>
     </div>
     <div class="col">
-    <button class="btn btn-primary" @click="${this.new}">New</button>
+    <button class="btn btn-primary" @click="${this.clear}">clear</button>
     <login-element name="Login"></login-element>
     <input-view name="Input"></input-view>
 
@@ -221,7 +221,7 @@ class VisView extends LitElement {
     `;
   }
 
-  new(){
+  clear(){
     this.data.nodes.clear()
     this.data.edges.clear()
   }
@@ -247,6 +247,9 @@ class VisView extends LitElement {
           case "addTriple":
           app.addTriple(message.triple)
           break;
+          case "clear":
+          app.clear()
+          break;
           default:
           console.log("Unknown action ",message)
         }
@@ -257,21 +260,22 @@ class VisView extends LitElement {
 
   addTriple(t){
     // from input-view
-    // TODO addEdgeIfnotExist
+    console.log(t)
     let n_sub = {id: t.subject, label: this.localName(t.subject), title: t.subject}
     this.addNodeIfNotExist(n_sub)
     let n_obj = {id: t.object, label: this.localName(t.object), title: t.object}
     this.addNodeIfNotExist(n_obj)
     let edge = {from: n_sub.id, to: n_obj.id, label: this.localName(t.predicate), title: t.predicate}
-    this.network.body.data.edges.update(edge)
+    //  this.network.body.data.edges.update(edge)
+    this.addEdgeIfNotExist(edge)
   }
 
 
-  triplesChanged(triples, clear=false){
+  triplesChanged(triples){
     //from tripledoc in browser-view
-    // TODO addEdgeIfnotExist
-    clear ==  true ? this.new() : ""
     let app = this
+    var clear = confirm("Do you want to clear the network ?");
+    clear ==  true ? this.clear() : ""
 
     if (triples.length != 0){
       triples.forEach((t, i) => {
@@ -280,11 +284,12 @@ class VisView extends LitElement {
         let n_obj = {id: t.object.id, label: app.localName(t.object.id), title: t.object.id}
         app.addNodeIfNotExist(n_obj)
         let edge = {from: n_sub.id, to: n_obj.id, label: app.localName(t.predicate.id), title: t.predicate.id}
-        app.network.body.data.edges.update(edge)
+        /*  app.network.body.data.edges.update(edge)*/
+        this.addEdgeIfNotExist(edge)
       });
 
     }else{
-      alert("Are really sure that this file contains triples ? :-/")
+      alert("this file does not contain any triple.")
     }
 
   }
@@ -306,6 +311,28 @@ class VisView extends LitElement {
     console.log(edge)
     this.network.body.data.edges.update(edge)
   }
+
+  addEdgeIfNotExist (edge){
+    let id = ""
+    //  console.log("recherche "+id_sujet+" "+id_objet+" "+propriete)
+    var items = this.network.body.data.edges.get({
+      filter: function (item) {
+        return item.from == edge.from && item.to == edge.to && item.label == edge.label;
+      }
+    });
+    if (items.length > 0){
+      id = items[0].id;
+      // must update the edge ?
+      console.log("trouvé "+id);
+
+    }
+    //else create node and get id
+    else{
+      id = this.network.body.data.edges.add(edge);
+      console.log("creation "+id);
+    }
+  }
+
 
   addNodeIfNotExist(data){
     let network = this.network
@@ -488,133 +515,133 @@ class VisView extends LitElement {
             //minVelocity: 1, //0.1
             solver: 'repulsion',
             /*stabilization: {
-              enabled: true,
-              iterations: 1000,
-              updateInterval: 100,
-              onlyDynamicEdges: false//,
-              //  fit: true
-            },*/
-            //timestep: 0.5,
-            //adaptiveTimestep: true
+            enabled: true,
+            iterations: 1000,
+            updateInterval: 100,
+            onlyDynamicEdges: false//,
+            //  fit: true
+          },*/
+          //timestep: 0.5,
+          //adaptiveTimestep: true
+        },
+        manipulation: {
+          // https://github.com/almende/vis/blob/master/examples/network/other/manipulationEditEdgeNoDrag.html
+          addNode: function (data, callback) {
+            app.shadowRoot.getElementById('node-operation').innerHTML = "Add Node";
+            app.shadowRoot.getElementById('node-label').value = "";
+            app.editNode(data, app.clearNodePopUp, callback);
           },
-          manipulation: {
-            // https://github.com/almende/vis/blob/master/examples/network/other/manipulationEditEdgeNoDrag.html
-            addNode: function (data, callback) {
-              app.shadowRoot.getElementById('node-operation').innerHTML = "Add Node";
-              app.shadowRoot.getElementById('node-label').value = "";
-              app.editNode(data, app.clearNodePopUp, callback);
-            },
-            editNode: function (data, callback) {
-              app.shadowRoot.getElementById('node-operation').innerHTML = "Edit Node";
-              app.editNode(data, app.cancelNodeEdit, callback);
-            },
-            addEdge: function (data, callback) {
-              if (data.from == data.to) {
-                var r = confirm("Do you want to connect the node to itself?");
-                if (r != true) {
-                  callback(null);
-                  return;
-                }
+          editNode: function (data, callback) {
+            app.shadowRoot.getElementById('node-operation').innerHTML = "Edit Node";
+            app.editNode(data, app.cancelNodeEdit, callback);
+          },
+          addEdge: function (data, callback) {
+            if (data.from == data.to) {
+              var r = confirm("Do you want to connect the node to itself?");
+              if (r != true) {
+                callback(null);
+                return;
               }
-              app.shadowRoot.getElementById('edge-operation').innerHTML = "Add Edge";
-              app.shadowRoot.getElementById('edge-label').value = "";
-              app.editEdgeWithoutDrag(data, callback);
-            },
-            editEdge: function (data, callback) {
-              app.shadowRoot.getElementById('edge-operation').innerHTML = "Edit Edge";
-              app.editEdgeWithoutDrag(data, callback);
-            },
-          }
+            }
+            app.shadowRoot.getElementById('edge-operation').innerHTML = "Add Edge";
+            app.shadowRoot.getElementById('edge-label').value = "";
+            app.editEdgeWithoutDrag(data, callback);
+          },
+          editEdge: function (data, callback) {
+            app.shadowRoot.getElementById('edge-operation').innerHTML = "Edit Edge";
+            app.editEdgeWithoutDrag(data, callback);
+          },
         }
-
-        this.network = new vis.Network(container, this.data, options);
-
-        this.network.on("selectNode", function (params) {
-          console.log(params)
-          app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
-          app.selected_edges =  app.network.body.data.edges.get(params.edges)
-        })
-
-        this.network.on("selectEdge", function (params) {
-          console.log(params)
-          app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
-          app.selected_edges =  app.network.body.data.edges.get(params.edges)
-        })
-        this.network.on("deselectNode", function (params) {
-          console.log(params)
-          app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
-          app.selected_edges =  app.network.body.data.edges.get(params.edges)
-        })
-        this.network.on("deselectEdge", function (params) {
-          console.log(params)
-          app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
-          app.selected_edges =  app.network.body.data.edges.get(params.edges)
-        })
-      }
-      ///////////////////////////
-
-      editNode(data, cancelAction, callback){
-        console.log(data)
-        this.shadowRoot.getElementById('node-label').value = data.label;
-        this.shadowRoot.getElementById('node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
-        this.shadowRoot.getElementById('node-cancelButton').onclick = cancelAction.bind(this, callback);
-        this.shadowRoot.getElementById('node-popUp').style.display = 'block';
-        //  this.agent.send("VisTool", {action: "changeTool", params: {data: data, tool: "editNode", callback: cb}})
       }
 
-      // Callback passed as parameter is ignored
-      clearNodePopUp() {
-        this.shadowRoot.getElementById('node-saveButton').onclick = null;
-        this.shadowRoot.getElementById('node-cancelButton').onclick = null;
-        this.shadowRoot.getElementById('node-popUp').style.display = 'none';
-      }
+      this.network = new vis.Network(container, this.data, options);
 
-      cancelNodeEdit(callback) {
-        this.clearNodePopUp();
-        callback(null);
-      }
+      this.network.on("selectNode", function (params) {
+        console.log(params)
+        app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
+        app.selected_edges =  app.network.body.data.edges.get(params.edges)
+      })
 
-      saveNodeData(data, callback) {
-        data.label = this.shadowRoot.getElementById('node-label').value;
-        this.clearNodePopUp();
-        callback(data);
-      }
+      this.network.on("selectEdge", function (params) {
+        console.log(params)
+        app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
+        app.selected_edges =  app.network.body.data.edges.get(params.edges)
+      })
+      this.network.on("deselectNode", function (params) {
+        console.log(params)
+        app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
+        app.selected_edges =  app.network.body.data.edges.get(params.edges)
+      })
+      this.network.on("deselectEdge", function (params) {
+        console.log(params)
+        app.selected_nodes =  app.network.body.data.nodes.get(params.nodes)
+        app.selected_edges =  app.network.body.data.edges.get(params.edges)
+      })
+    }
+    ///////////////////////////
 
-      editEdgeWithoutDrag(data, callback){
-        console.log(data)
-        this.shadowRoot.getElementById('edge-label').value = data.label;
-        this.shadowRoot.getElementById('edge-saveButton').onclick = this.saveEdgeData.bind(this, data, callback);
-        this.shadowRoot.getElementById('edge-cancelButton').onclick = this.cancelEdgeEdit.bind(this,callback);
-        this.shadowRoot.getElementById('edge-popUp').style.display = 'block';
-      }
-
-      clearEdgePopUp() {
-        this.shadowRoot.getElementById('edge-saveButton').onclick = null;
-        this.shadowRoot.getElementById('edge-cancelButton').onclick = null;
-        this.shadowRoot.getElementById('edge-popUp').style.display = 'none';
-      }
-
-      cancelEdgeEdit(callback) {
-        this.clearEdgePopUp();
-        callback(null);
-      }
-
-      saveEdgeData(data, callback) {
-        console.log(data)
-        if (typeof data.to === 'object')
-        data.to = data.to.id
-        if (typeof data.from === 'object')
-        data.from = data.from.id
-        data.label = this.shadowRoot.getElementById('edge-label').value;
-        this.clearEdgePopUp();
-        callback(data);
-      }
-
-      configChanged(config){
-        this.config = config
-        console.log(this.config)
-      }
-
+    editNode(data, cancelAction, callback){
+      console.log(data)
+      this.shadowRoot.getElementById('node-label').value = data.label;
+      this.shadowRoot.getElementById('node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
+      this.shadowRoot.getElementById('node-cancelButton').onclick = cancelAction.bind(this, callback);
+      this.shadowRoot.getElementById('node-popUp').style.display = 'block';
+      //  this.agent.send("VisTool", {action: "changeTool", params: {data: data, tool: "editNode", callback: cb}})
     }
 
-    customElements.define('vis-view', VisView);
+    // Callback passed as parameter is ignored
+    clearNodePopUp() {
+      this.shadowRoot.getElementById('node-saveButton').onclick = null;
+      this.shadowRoot.getElementById('node-cancelButton').onclick = null;
+      this.shadowRoot.getElementById('node-popUp').style.display = 'none';
+    }
+
+    cancelNodeEdit(callback) {
+      this.clearNodePopUp();
+      callback(null);
+    }
+
+    saveNodeData(data, callback) {
+      data.label = this.shadowRoot.getElementById('node-label').value;
+      this.clearNodePopUp();
+      callback(data);
+    }
+
+    editEdgeWithoutDrag(data, callback){
+      console.log(data)
+      this.shadowRoot.getElementById('edge-label').value = data.label;
+      this.shadowRoot.getElementById('edge-saveButton').onclick = this.saveEdgeData.bind(this, data, callback);
+      this.shadowRoot.getElementById('edge-cancelButton').onclick = this.cancelEdgeEdit.bind(this,callback);
+      this.shadowRoot.getElementById('edge-popUp').style.display = 'block';
+    }
+
+    clearEdgePopUp() {
+      this.shadowRoot.getElementById('edge-saveButton').onclick = null;
+      this.shadowRoot.getElementById('edge-cancelButton').onclick = null;
+      this.shadowRoot.getElementById('edge-popUp').style.display = 'none';
+    }
+
+    cancelEdgeEdit(callback) {
+      this.clearEdgePopUp();
+      callback(null);
+    }
+
+    saveEdgeData(data, callback) {
+      console.log(data)
+      if (typeof data.to === 'object')
+      data.to = data.to.id
+      if (typeof data.from === 'object')
+      data.from = data.from.id
+      data.label = this.shadowRoot.getElementById('edge-label').value;
+      this.clearEdgePopUp();
+      callback(data);
+    }
+
+    configChanged(config){
+      this.config = config
+      console.log(this.config)
+    }
+
+  }
+
+  customElements.define('vis-view', VisView);

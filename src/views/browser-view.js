@@ -16,7 +16,8 @@ class BrowserView extends LitElement {
       folder: {type: Object},
       folderName: {type: String},
       fileName: {type: String},
-      createHidden: {type: Boolean}
+      createHidden: {type: Boolean},
+      currentFile: {type: String}
     };
   }
 
@@ -32,6 +33,7 @@ class BrowserView extends LitElement {
     this.fileName = ""
     this.fc = new SolidFileClient(solid.auth)
     this.createHidden = true
+    this.currentFile = null
   }
 
   render(){
@@ -39,6 +41,8 @@ class BrowserView extends LitElement {
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
+
+    currentFile : ${this.currentFile}
     <div class="container-fluid" ?hidden="${this.path.length == 0}">
     <div class="btn-group  container-fluid" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-secondary" @click="${this.up}"><i class="fas fa-arrow-up" @click="${this.up}"></i> </button>
@@ -88,16 +92,17 @@ class BrowserView extends LitElement {
       <li class="list-group-item">
       <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group" role="group" aria-label="First group">
-      <button type="button" class="btn btn-outline-secondary" url="${f.url}" type="${f.type}" @click="${this.changePath}">
-      <i class="fas fa-file"></i>
+      <div class="text-outline-secondary" url="${f.url}" type="${f.type}" @click="${this.changePath}">
+      <i class="fas fa-file" url="${f.url}" type="${f.type}" @click="${this.changePath}"></i>
       ${f.name}
-      </button>
+      </div>
       </div>
 
       <div class="btn-group" role="group">
-      <a href="${f.url}" class="btn btn-secondary" target="_blank"><i class="fas fa-external-link-alt"></i></a>
-      <button type="button" class="btn btn-secondary" disabled><i class="fas fa-file-download"></i></button>
-      <button type="button" class="btn btn-secondary"disabled><i class="fas fa-file-export"></i></button>
+      <a href="${f.url}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+  <!--    <button type="button" class="btn btn-secondary btn-sm" disabled><i class="fas fa-file-download"></i></button>
+      <button type="button" class="btn btn-secondary btn-sm"disabled><i class="fas fa-file-export"></i></button>
+    -->  <button type="button" class="btn btn-secondary btn-sm" url='${f.url}' @click="${this.deleteFile}"><i class="fas fa-trash" url='${f.url}' @click="${this.delete}"></i></button>
       </div>
       </div>
       </li>
@@ -109,20 +114,15 @@ class BrowserView extends LitElement {
     `;
   }
 
-  /*
-  TODO AFTER CONFIRM
-  https://github.com/jeff-zucker/solid-file-client#deletefile-fileurl-options-
-  deleteFile( fileURL, options )
-  deleteFolder( folderURL )
-  */
+
   new(e){
     this.createHidden = false
     let input_type = e.target.getAttribute("input_type")
     this.shadowRoot.getElementById("create_input").setAttribute("input_type", input_type)
     this.shadowRoot.getElementById("create_input").setAttribute("type", input_type == "file" ? "file" : "text")
     if (input_type == "filename"){
-      this.currentFile = (new Date).toISOString().replace(/:/gi,'-').replace(/z|t/gi,' ').trim()+".ttl"
-      this.shadowRoot.getElementById("create_input").value = this.currentFile
+      this.shadowRoot.getElementById("create_input").value = (new Date).toISOString().replace(/:/gi,'-').replace(/t/gi,'_').replace(/z/gi,'').trim()+".ttl"
+      this.agent.send("Vis", {action: "clear"})
     }
 
     //  this.shadowRoot.getElementById("create_input").placeholder( type)
@@ -139,8 +139,10 @@ class BrowserView extends LitElement {
         case "filename":
         create_path = !create_path.endsWith(".ttl") ? create_path+".ttl" : create_path
         console.log(create_path)
+        this.currentFile = create_path
         let defaultContent = "# created by Spoggy App"
         await this.fc.createFile(create_path,defaultContent,"text/turtle").catch(err => console.error(`Error: ${err}`))
+
         break;
         case "foldername":
         console.log(create_path)
@@ -153,18 +155,34 @@ class BrowserView extends LitElement {
 
       }
       this.createHidden = true
-      this.updateFolders()
+      this.updateFolder()
       this.shadowRoot.getElementById("create_input").value = ""
     }else{
       alert ("I can't create a folder or a file with a blank name !")
     }
+
   }
 
   closeCreateInput(){
     this.createHidden = true
   }
 
+  async deleteFile(e){
+    let url = e.target.getAttribute("url")
 
+    var del = confirm("Do you want really want to delete "+url+" ?");
+    if (del == true){
+      await this.fc.deleteFile(url)
+      this.updateFolder()
+    }
+
+    /*
+    TODO AFTER CONFIRM
+    https://github.com/jeff-zucker/solid-file-client#deletefile-fileurl-options-
+    deleteFile( fileURL, options )
+    deleteFolder( folderURL )
+    */
+  }
 
 
   changePath(e){
@@ -174,7 +192,7 @@ class BrowserView extends LitElement {
     if (type == "folder"){
       this.last = this.path
       this.path = url
-      this.updateFolders()
+      this.updateFolder()
     }else{
       console.log("A file, todo",url)
       this.getFile(url)
@@ -182,19 +200,22 @@ class BrowserView extends LitElement {
   }
 
   async getFile(url){
+    this.createHidden = true
     try{
       const doc = await fetchDocument(url);
-
+      this.currentFile = url
       //  console.log("doc",doc)
       let triples = doc.getTriples()
       console.log("triples",triples)
       //  let vis_network = this.statements2vis(triples)
       this.agent.send("Vis", {action: "triplesChanged", triples: triples})
-      this.currentFile = url
+
     }
     catch(e){
+      console.log(e)
       alert("Oh i've got a problem to read this file :-(")
     }
+    console.log("currentFile", this.currentFile)
   }
 
 
@@ -364,11 +385,12 @@ class BrowserView extends LitElement {
       if( !(await this.fc.itemExists(this.path)) ) {
         await this.fc.createFolder(this.path) // only create if it doesn't already exist
       }
-      this.currentFile = (new Date).toISOString().replace(/:/gi,'-').replace(/t/gi,'_').replace(/z/gi,'').trim()+".ttl"
-      this.shadowRoot.getElementById("create_input").value= this.currentFile
+      let newfilename = (new Date).toISOString().replace(/:/gi,'-').replace(/t/gi,'_').replace(/z/gi,'').trim()+".ttl"
+      this.shadowRoot.getElementById("create_input").value = newfilename
       this.shadowRoot.getElementById("create_input").setAttribute("input_type", "filename")
       this.createHidden = false
-      this.updateFolders()
+      this.currentFile = this.path+newfilename
+      this.updateFolder()
     }else{
       this.storage = ""
       this.path = ""
@@ -377,7 +399,7 @@ class BrowserView extends LitElement {
     }
   }
 
-  async updateFolders(){
+  async updateFolder(){
     //  console.log(this.path)
     this.folder = await this.fc.readFolder(this.path)
     console.log("folder",this.folder)
@@ -387,25 +409,26 @@ class BrowserView extends LitElement {
     let subject = t.subject
     let predicate = t.predicate
     let object = t.object
-    if (this.currentFile != null){
-      console.log(this.currentFile)
-      subject = this.currentFile+"#"+t.subject
-      predicate = this.currentFile+"#"+t.predicate
-      object = this.currentFile+"#"+t.object
-      await solid.data[subject][predicate].add(namedNode(object))
-    }
+
+    console.log(this.currentFile)
+    subject = this.currentFile+"#"+t.subject
+    predicate = this.currentFile+"#"+t.predicate
+    object = this.currentFile+"#"+t.object
+    await solid.data[subject][predicate].add(namedNode(object))
+
     this.agent.send("Vis", {action: "addTriple", triple: {subject: subject, predicate: predicate, object: object} })
+    this.updateFolder()
   }
 
   up(){
     this.path = this.folder.parent
-    this.updateFolders()
+    this.updateFolder()
   }
 
   prec(){
     // TODO manage an history
     this.path = this.last
-    this.updateFolders()
+    this.updateFolder()
   }
 
   firstUpdated(){

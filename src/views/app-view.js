@@ -14,8 +14,9 @@ class AppView extends LitElement {
   constructor() {
     super();
     this.name = "App"
-    this.levels = [ "Browser", "Triple", "Node"] // "Pod",, "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
-    this.level = this.levels[0]
+    //https://labdsurlholacracy.com/bande-dessinee-holacracy#page-54-55
+    this.levels = [ "World", "Orga", "Gouv", "Todo", "Browser", "Triple", "Node"] // "Pod",, "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
+    this.level = "Orga"
   }
 
   render(){
@@ -23,8 +24,11 @@ class AppView extends LitElement {
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
 
     <div class="container-fluid">
+
+
+
     <div class="row">
-    <div class="col">
+    <div class="col-md-6">
     <vis-view name="Vis">Loading VIS</vis-view>
     </div>
     <div class="col">
@@ -35,20 +39,17 @@ class AppView extends LitElement {
       `)}
       <login-element name="Login"></login-element>
       </div>
-
-
-      </div>
-      <!--    <vis-tool-view name="VisTool">Vis Tool</vis-tool-view> -->
-      </div>
-      <div class="row">
-      ${this.level}
-
       <browser-view name="Browser" ?hidden="${this.level != "Browser"}"></browser-view>
-
       <input-view name="Input" ?hidden="${this.level != "Triple"}"></input-view>
       <selected-view name="Selected" ?hidden="${this.level != "Node"}"></selected-view>
 
+      <todo-view name="Todo" ?hidden="${this.level != "Todo"}"></todo-view>
+      <world-view name="World" ?hidden="${this.level != "World"}"></world-view>
+      <organization-view name="Organization" ?hidden="${this.level != "Orga"}"></organization-view>
+      <reunion-gouvernance-view name="Gouvernance" ?hidden="${this.level != "Gouv"}"></reunion-gouvernance-view>
       </div>
+      </div>
+
       </div>
       `;
     }

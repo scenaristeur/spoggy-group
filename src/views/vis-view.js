@@ -16,7 +16,7 @@ class VisView extends LitElement {
     super();
     let face = "'Font Awesome 5 Free'"
     this.name = "Vis"
-    this.visHide = false
+    this.visHide = true
     this.groups = {
       organizations: {
         label: 'Orga',
@@ -165,9 +165,14 @@ class VisView extends LitElement {
     <link href="css/vis-network.min.css" rel="stylesheet">
     <style>
     #mynetwork {
-      max-width: 500px; /* 800px */
+      /* 800px */
+    /*  max-width: 500px;
       min-width: 320px;
-      height: 600px;
+      height: 600px;*/
+      max-width: 500px;
+        min-width: 320px;
+      width: 100vw;
+      height: 90vh;
       border: 1px solid lightgray;
       background: linear-gradient(to bottom, rgba(215, 215, 255), rgba(250, 250, 170))
     }
@@ -326,6 +331,7 @@ class VisView extends LitElement {
         let edge = {from: n_sub.id, to: n_obj.id, label: this.localName(t.predicate), title: t.predicate}
         //  this.network.body.data.edges.update(edge)
         this.addEdgeIfNotExist(edge)
+        this.network.fit();
       }
 
 
@@ -344,6 +350,7 @@ class VisView extends LitElement {
             let edge = {from: n_sub.id, to: n_obj.id, label: app.localName(t.predicate.id), title: t.predicate.id}
             /*  app.network.body.data.edges.update(edge)*/
             this.addEdgeIfNotExist(edge)
+            this.network.fit();
           });
 
         }else{

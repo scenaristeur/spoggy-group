@@ -75,7 +75,7 @@ class BrowserView extends LitElement {
 
 
 
-    <div style="height: 30vh; width:100%; overflow: auto">
+    <div style="height:40vh; width:100%; overflow: auto">
     <ul class="list-group">
     ${this.folder.folders.map((f, i) =>
       html`

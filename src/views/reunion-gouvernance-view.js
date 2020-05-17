@@ -70,13 +70,42 @@ L'important est d'avancer d'un pas pour apprendre et ajuster en marchant. Toute 
 rythmée en trois temps (garanti par le facilitateur, ne doit pas glisser en discussion libre) : Une Question -> Une réponse de l'apporteur proposeur, pause. <br>
 Une question de clarification est seulement  une demande d'information. ex : une question "Ne crois-tu pas ..." n'est pas une question de clarification mais une réaction qui sera traitée plus tard.<br>
 Une bonne question serait "Combien de stagiaires n'ont pas les prérequis ? ". Le proposeur/apporteur a le droit de ne pas avoir la réponse aux questions de clarifications.<br>
-Facilit : "Y'a-t-il d'autres questions de clarification?".<br>
-4c. Réactions.<br>
-4d. Amendements.<br>
-4e. Objections.<br>
-4f. Intégration.<br>
-5. Tour de clôture.<br><br>
+Facilitateur : "Y'a-t-il d'autres questions de clarification?".<br>
+4c. Réactions. Le facilitateur interroge tour à tour chaque participant : "Quelle est ta réaction?" -> les participants expriment ce qu'ils veulent factuel ou emotionnel, court ou long, il s'agit juste de ne pas engager de discussion.
+ Chacun s'exprime comme s'il était seul s'adresser à l'espace impersonnel de la réunion, évitant les "TU" qui appeleraient une réaction. Le tour de réaction permet à
+  chacun de réagir à la proposition telle qu'elle est écrite au tableau. Chacun peut vider son sac, mais personne n'embraye en réagissant.<br>
+4d. Amendements. "Proposeur, suite aux réactions, souhaites-tu clarifier et/ou amender ta proposition ?"<br>
+4e. Objections. "Voyez-vous une raison qui fait que l'adoption de cette proposition causerait du tort ou ferait regresser l'organisation ?" Oui/Non . nul ne pourra dire qu'il n'a pas pu s'exprimer. Le facilitateur
+peut tester l'objection afin de vérifier que cette objection remplit bien les critères de validité tels que défini par la constitution. S'assurer que l'évolution de l'organisation ne sera pas bloquée par des
+réactions égotiques. : "Quel tort serait causé à l'organisation ?". "Si on supprime la proposition, la tension existe-t-elle encore ? Oui/non ?" Voir si
+l'objection ne serait pas une autre tension à porter à l'ordre du jour. <br>
+Le facilitateur doit veiller à ce que la proposition soit un délivrable valide de gouvernance au regard de la consitution.
+4f. Intégration. (des objections) : Un délivrable de Gouvernance : En gouvernance, on ne parle que de création de rôles, de suppression de rôles, de modification des rôles. <br>
+Facilitateur : "Quelles sont les autorités en jeu ici ? " -> Cette phrase donne lien à la première discussion ouverte. réponse : "Support Client" & "Conception formation"
+-> il faudrait modifier le rôle "conception de formation" en lui ajoutant une redevabilité : "définir et publier les prérequis".
+et transformer la première redevabilité du "support client" en "faciliter la vente des inscriptions en formation en vérifiant que les prérequis sont respectés".
+La proposition "verifier les prerequis" devient ajout d'une redevabilité et modif d'une autre.<br>
+ On intègre toutes les objections, puis on revient à l'étape précédente pour un nouveau tour d'objections jusqu'à ce qu'il n'y ait plus d'objection.<br>
+ Chaque point à l'ordre du jour est traité selon le même processus. Si d'autres tensions apparaissent, il est possible de les ajouter à la liste.<br>
+ Si nécessaire, une réunion exceptionnelle est programmée.<br>
 
+ <br>
+ Quand une organisation commence en Holacratie, elle passe souvent par trois étapes : <br>
+ 1 d'abord personne n'ose parler, aucune tension ne s'exprime.<br>
+ 2 puis les vannes s'ouvrent et d'innobrables tension sont exprimées. Quelques longues réunions sont nécessaires, il faut drainer les toxines de l'organisation.<br>
+ 3 enfin les choses se régulent et un rythme naturel plus aisé se met en place après quelques semaines, les tensions exprimées sont alors d'une autre qualité.<br>
+ <br>
+
+5. Tour de clôture.<br>
+Toute réunion se termine par un tour comme elle a commencé, ce qui permet à chacun de porter un regard évaluatif sur la réunion.<br>
+Prendre du recul sur ce qui vient de se passer. Chacun dépose ce qu'il a à dire, il n'est pas permis de réagir. Le tour de clôture ne doit pas tourner en discussion.<br>
+
+<br>
+
+
+
+<br>
+La réunion de Gouvernance n'est pas une séance "d'intelligence collective" où l'on viserait à trouver ensemble la meilleure solution possible. On veut seulement une décision pratiquable tout de suite.<br>
     <br>
     Hello from<b>${this.name}</b><br>
     debug : ${this.debug}<br>

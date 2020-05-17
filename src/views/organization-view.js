@@ -64,6 +64,13 @@ Toute tension ressentie par qui que ce soit puisse être traitée de façon rapi
 Chaque réunion obéit à 2 principes essentiels : TOUTES les tensions sont prises en compte, on traite UNE tension à la fois.<br>
 https://labdsurlholacracy.com/bande-dessinee-holacracy#page-88-89.<br>
 
+<br>
+Quand une organisation commence en Holacratie, elle passe souvent par trois étapes : <br>
+1 d'abord personne n'ose parler, aucune tension ne s'exprime.<br>
+2 puis les vannes s'ouvrent et d'innobrables tension sont exprimées. Quelques longues réunions sont nécessaires, il faut drainer les toxines de l'organisation.<br>
+3 enfin les choses se régulent et un rythme naturel plus aisé se met en place après quelques semaines, les tensions exprimées sont alors d'une autre qualité.<br>
+<br>
+
 
 
 

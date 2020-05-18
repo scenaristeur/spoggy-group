@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
 import * as SolidFileClient from "solid-file-client"
 import { createDocument } from "tripledoc";
+import { rdf, cal, wf, dc, meeting} from 'rdf-namespaces';
 
 class GouvernanceMeetingView extends LitElement {
 
@@ -76,50 +77,86 @@ class GouvernanceMeetingView extends LitElement {
   }
 
   async submit(){
-    let meeting = {}
-    meeting.created = new Date().toISOString()
-    meeting.summary = this.shadowRoot.getElementById("summary").value.trim()
-    meeting.location = this.shadowRoot.getElementById("location").value.trim()
-    meeting.start = this.shadowRoot.getElementById("start").value.trim()
-    meeting.end = this.shadowRoot.getElementById("end").value.trim()
-    meeting.comment = this.shadowRoot.getElementById("comment").value.trim()
-    console.log(meeting)
-    let meeting_uri = this.path+encodeURI(meeting.summary)+"/index.ttl"
-    console.log(meeting_uri)
-    const meeting_file = createDocument(meeting_uri);
-    let main_subject = meeting_file.addSubject({identifier: "this"})
-    let participation_subject = meeting_file.addSubject()
+    let meet = {}
+    meet.created = new Date().toISOString()
+    meet.summary = this.shadowRoot.getElementById("summary").value.trim()
+    meet.location = this.shadowRoot.getElementById("location").value.trim()
+    meet.start = this.shadowRoot.getElementById("start").value.trim()
+    meet.end = this.shadowRoot.getElementById("end").value.trim()
+    meet.comment = this.shadowRoot.getElementById("comment").value.trim()
+    console.log(meet)
+    let meet_uri = this.path+encodeURI(meet.summary)+"/index.ttl"
+    console.log(meet_uri)
+    const meetDoc = createDocument(meet_uri);
+    let main_subject = meetDoc.addSubject({identifier: "this"})
+    let participation_subject = meetDoc.addSubject()
     console.log("subj",main_subject)
-    main_subject.setRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/ns/pim/meeting#Meeting");
+    main_subject.setRef(rdf.type, meeting.Meeting);
 
-    main_subject.setString('http://www.w3.org/2002/12/cal/ical#summary', meeting.summary);
-    main_subject.setString('http://www.w3.org/2002/12/cal/ical#location', meeting.location);
-    main_subject.setString('http://www.w3.org/2002/12/cal/ical#dtstart', meeting.start);
-    main_subject.setString('http://www.w3.org/2002/12/cal/ical#dtend', meeting.end);
-    main_subject.setString('http://www.w3.org/2002/12/cal/ical#comment', meeting.comment);
-    main_subject.setString('http://purl.org/dc/elements/1.1/created', meeting.created);
-main_subject.setRef('http://purl.org/dc/elements/1.1/author', this.webId)
-main_subject.setString('http://www.w3.org/ns/ui#backgroundColor', "#ddddcc")
-main_subject.setRef('http://www.w3.org/ns/pim/meeting#toolList', main_subject.asRef())
-main_subject.setRef('http://www.w3.org/2005/01/wf/flow#participation', participation_subject.asRef())
+    main_subject.setString(cal.summary, meet.summary);
+    main_subject.setString(cal.location, meet.location);
+    main_subject.setString(cal.dtstart, meet.start);
+    main_subject.setString(cal.dtend, meet.end);
+    main_subject.setString(cal.comment, meet.comment);
+    main_subject.setString("http://purl.org/dc/elements/1.1/created", meet.created);
+    main_subject.setRef("http://purl.org/dc/elements/1.1/author", this.webId)
+    main_subject.setString('http://www.w3.org/ns/ui#backgroundColor', "#ddddcc")
+    //main_subject.setRef('http://www.w3.org/ns/pim/meeting#toolList', main_subject.asRef())
+    main_subject.setRef("http://www.w3.org/2005/01/wf/flow#participation", participation_subject.asRef())
 
-participation_subject.setString('http://www.w3.org/2002/12/cal/ical#dtstart',meeting.created)
-participation_subject.setRef('http://www.w3.org/2005/01/wf/flow#participant', this.webId)
-participation_subject.setString('http://www.w3.org/ns/ui#backgroundColor', "#dbe0cb")
-/*@prefix : <#>.
-@prefix mee: <http://www.w3.org/ns/pim/meeting#>.
-@prefix ic: <http://www.w3.org/2002/12/cal/ical#>.
-@prefix XML: <http://www.w3.org/2001/XMLSchema#>.
-@prefix flow: <http://www.w3.org/2005/01/wf/flow#>.
-@prefix c: </profile/card#>.
-@prefix ui: <http://www.w3.org/ns/ui#>.
-@prefix n0: <http://purl.org/dc/elements/1.1/>.
+    participation_subject.setString(cal.dtstart,meet.created)
+    participation_subject.setRef("http://www.w3.org/2005/01/wf/flow#participant", this.webId)
+    participation_subject.setString('http://www.w3.org/ns/ui#backgroundColor', "#dbe0cb")
 
-:id1589757677361
+    const toolList = meetDoc.addSubject();
+    toolList.setRef(rdf.first, main_subject.asRef());
+    toolList.setRef(rdf.type, rdf.List);
+    toolList.setRef(rdf.rest, "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil");
+    main_subject.setRef(meeting.toolList, toolList.asRef());
+    /*
+    acl: 'http://www.w3.org/ns/auth/acl#',
+    arg: 'http://www.w3.org/ns/pim/arg#',
+    cal: 'http://www.w3.org/2002/12/cal/ical#',
+    contact: 'http://www.w3.org/2000/10/swap/pim/contact#',
+    dc: 'http://purl.org/dc/elements/1.1/',
+    dct: 'http://purl.org/dc/terms/',
+    foaf: 'http://xmlns.com/foaf/0.1/',
+    http: 'http://www.w3.org/2007/ont/http#',
+    hydra: 'http://www.w3.org/ns/hydra/core#',
+    ldp: 'http://www.w3.org/ns/ldp#',
+    link: 'http://www.w3.org/2007/ont/link#',
+    log: 'http://www.w3.org/2000/10/swap/log#',
+    meeting: 'http://www.w3.org/ns/pim/meeting#',
+    owl: 'http://www.w3.org/2002/07/owl#',
+    qu: 'http://www.w3.org/2000/10/swap/pim/qif#',
+    trip: 'http://www.w3.org/ns/pim/trip#',
+    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+    sched: 'http://www.w3.org/ns/pim/schedule#',
+    schema: 'http://schema.org/',
+    sioc: 'http://rdfs.org/sioc/ns#',
+    skos: 'http://www.w3.org/2004/02/skos/core#',
+    solid: 'http://www.w3.org/ns/solid/terms#',
+    space: 'http://www.w3.org/ns/pim/space#',
+    tab: 'http://www.w3.org/2007/ont/link#',
+    tabont: 'http://www.w3.org/2007/ont/link#',
+    vcard: 'http://www.w3.org/2006/vcard/ns#',
+    wf: 'http://www.w3.org/2005/01/wf/flow#',
+    */
+    /*@prefix : <#>.
+    @prefix mee: <http://www.w3.org/ns/pim/meeting#>.
+    @prefix ic: <http://www.w3.org/2002/12/cal/ical#>.
+    @prefix XML: <http://www.w3.org/2001/XMLSchema#>.
+    @prefix flow: <http://www.w3.org/2005/01/wf/flow#>.
+    @prefix c: </profile/card#>.
+    @prefix ui: <http://www.w3.org/ns/ui#>.
+    @prefix n0: <http://purl.org/dc/elements/1.1/>.
+
+    :id1589757677361
     ic:dtstart "2020-05-17T23:21:17Z"^^XML:dateTime;
     flow:participant c:me;
     ui:backgroundColor "#dbe0cb".
-:this
+    :this
     a mee:Meeting;
     n0:author c:me;
     n0:created "2020-05-17T23:21:01Z"^^XML:dateTime;
@@ -134,9 +171,9 @@ participation_subject.setString('http://www.w3.org/ns/ui#backgroundColor', "#dbe
     */
 
 
-    let success = await meeting_file.save();
+    let success = await meetDoc.save();
     console.log(success)
-   this.meetings = []
+    this.meetings = []
     this.listMeetings()
   }
 

@@ -16,7 +16,7 @@ class VisView extends LitElement {
     super();
     let face = "'Font Awesome 5 Free'"
     this.name = "Vis"
-    this.visHide = true
+    this.visHide = false
     this.groups = {
       organizations: {
         label: 'Orga',
@@ -166,11 +166,11 @@ class VisView extends LitElement {
     <style>
     #mynetwork {
       /* 800px */
-    /*  max-width: 500px;
+      /*  max-width: 500px;
       min-width: 320px;
       height: 600px;*/
       max-width: 500px;
-        min-width: 320px;
+      min-width: 320px;
       width: 100vw;
       height: 90vh;
       border: 1px solid lightgray;

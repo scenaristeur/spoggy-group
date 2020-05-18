@@ -14,7 +14,11 @@ import './views/organization-view.js';
 import './views/gouvernance-meeting-view.js';
 import './views/meeting-view.js';
 import './views/todo-view.js';
-
+import './views/cockpit-view.js';
+import './views/checklists-view.js';
+import './views/indicateurs-view.js';
+import './views/projets-view.js';
+import './views/reunions-view.js';
 
 //VIS
 import './views/vis-view.js';

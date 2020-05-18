@@ -11,7 +11,8 @@ import './views/input-view.js';
 //Hola
 import './views/world-view.js';
 import './views/organization-view.js';
-import './views/reunion-gouvernance-view.js';
+import './views/gouvernance-meeting-view.js';
+import './views/meeting-view.js';
 import './views/todo-view.js';
 
 

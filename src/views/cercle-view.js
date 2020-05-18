@@ -77,9 +77,10 @@ Il s'agit de différencier l'organisation et remembrer les rôles (c'est une
  vitalité de l'organisation. Lors des réunions de gouvernance,
  le 1er Lien créé et modifie les rôles en utilisant la raison d'être
  les domaines et les redevabilités.<br>
+
 <br>
 
-
+Pas vu les reunion strategies ??? reprendre là https://labdsurlholacracy.com/bande-dessinee-holacracy#page-176-177
 
  <br>
 

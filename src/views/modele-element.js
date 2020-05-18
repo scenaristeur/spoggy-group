@@ -26,7 +26,7 @@ class ModeleElement extends LitElement {
     <div class="container-fluid">
     Hello <b>${this.name}</b> from app-element
     </div>
-    
+
 
     <div ?hidden = "${!this.debug}">
     <hr>

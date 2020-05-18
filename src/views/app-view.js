@@ -15,8 +15,8 @@ class AppView extends LitElement {
     super();
     this.name = "App"
     //https://labdsurlholacracy.com/bande-dessinee-holacracy#page-54-55
-    this.levels = [ "World", "Orga", "Gouv", "Todo", "Browser", "Triple", "Node"] // "Pod",, "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
-    this.level = "Orga"
+    this.levels = [ "Gouv", "Todo", "Browser", "Triple", "Node"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
+    this.level = "Gouv"
   }
 
   render(){
@@ -46,7 +46,7 @@ class AppView extends LitElement {
       <todo-view name="Todo" ?hidden="${this.level != "Todo"}"></todo-view>
       <world-view name="World" ?hidden="${this.level != "World"}"></world-view>
       <organization-view name="Organization" ?hidden="${this.level != "Orga"}"></organization-view>
-      <reunion-gouvernance-view name="Gouvernance" ?hidden="${this.level != "Gouv"}"></reunion-gouvernance-view>
+      <gouvernance-meeting-view name="Gouvernance" ?hidden="${this.level != "Gouv"}"></gouvernance-meeting-view>
       </div>
       </div>
 

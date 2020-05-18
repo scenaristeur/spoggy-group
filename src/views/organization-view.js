@@ -32,11 +32,14 @@ class OrganizationView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
+    - Creation d'un pod pour l'organisation ? <br>
+    Configure the POD of the organization : Create a POD and connect with it to this page.<br>
+    - <button class="btn btn-primary" @click="${this.configurePod}">Configure POD</button>
 
-    vocabs : ${this.vocabs.map(v => html`<pre> ${JSON.stringify(v, undefined, 2)}</pre><br>`)}
+    <br>
+    - affectation d'un webId premier lien
 
-    shape: <br>
-    ${this.shape.map(f => html`<pre> ${JSON.stringify(f, undefined, 2)}</pre><br>`)}
+
 
 
 
@@ -45,6 +48,18 @@ class OrganizationView extends LitElement {
 
     <div ?hidden = "${!this.debug}">
     <hr>
+
+    vocabs : ${this.vocabs.map(v => html`<pre> ${JSON.stringify(v, undefined, 2)}</pre><br>`)}
+
+    shape: <br>
+    ${this.shape.map(f => html`<pre> ${JSON.stringify(f, undefined, 2)}</pre><br>`)}
+
+
+
+
+
+
+
     transversalité, coopération, échanges purement professionnels entre rôles,<br>
     https://labdsurlholacracy.com/bande-dessinee-holacracy#page-62-63 <br>
     Différentiation de 4 espaces : Espace de l'organisation , Espace des Rôles-ations,

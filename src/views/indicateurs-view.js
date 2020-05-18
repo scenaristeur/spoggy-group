@@ -22,14 +22,15 @@ class IndicateursView extends LitElement {
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
-    <div class="container-fluid">
-    <h4>Indicateurs   <i class="fas fa-plus-circle"></i></h4>
-    <div style="height:40vh; width:100%; overflow: auto">
+    <div class="container-fluid border border-info rounded mt-3">
+    <h4>Indicateurs <i class="fas fa-plus-circle"></i></h4>
+    <div style="max-height:30vh; width:100%; overflow: auto">
     <ul class="list-group">
     ${this.indicateurs.map((i) =>
       html`
       <li class="list-group-item">
-      ${i.name} : ${i.value} ${i.unite}
+      ${i.name} (${i.unite})
+      <span class="badge badge-primary badge-pill">${i.value}</span>
       </li>
       `
     )}

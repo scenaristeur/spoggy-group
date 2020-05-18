@@ -23,9 +23,9 @@ class ChecklistsView extends LitElement {
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
-    <div class="container-fluid">
+    <div class="container-fluid border border-info rounded mt-3">
     <h4>Checklists   <i class="fas fa-plus-circle"></i></h4>
-    <div style="height:40vh; width:100%; overflow: auto">
+    <div style="max-height:30vh; width:100%; overflow: auto" >
     <ul class="list-group">
     ${this.checklists.map((c, i) =>
       html`

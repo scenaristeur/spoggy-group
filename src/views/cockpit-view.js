@@ -25,9 +25,11 @@ class CockpitView extends LitElement {
 
     <div class="container-fluid">
     <div class="row">
+    
     <div class="col">
     <checklists-view name="Checklists"><checklists-view>
     </div>
+
     <div class="col">
     <indicateurs-view name="Indicateurs"></indicateurs-view>
     </div>
@@ -38,17 +40,8 @@ class CockpitView extends LitElement {
     </div>
 
     <div class="row">
-    Reunions
     <reunions-view name="Reunions"></reunions-view>
     </div>
-
-    <div class="row">
-
-    </div>
-
-
-
-
 
     </div>
 

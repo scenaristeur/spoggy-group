@@ -24,7 +24,7 @@ class BrowserView extends LitElement {
   constructor() {
     super();
     this.name = "Browser"
-    this.webId = {}
+    this.webId = null
     this.storage = ""
     this.path = ""
     this.last = ""

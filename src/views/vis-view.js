@@ -16,7 +16,7 @@ class VisView extends LitElement {
     super();
     let face = "'Font Awesome 5 Free'"
     this.name = "Vis"
-    this.visHide = false
+    this.visHide = true
     this.groups = {
       organizations: {
         label: 'Orga',

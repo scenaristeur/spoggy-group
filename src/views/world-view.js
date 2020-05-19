@@ -6,16 +6,21 @@ class WorldView extends LitElement {
   static get properties() {
     return {
       name: {type: String},
-      debug: {type: Boolean},
-      config: {type: Object}
+    organizationShape: {type: Object}
     };
   }
 
   constructor() {
     super();
     this.name = "World"
-    this.debug = true
-    this.config = {}
+    this.organizationShape = {
+      name: "New Organization",
+      object_type: "Organization",
+      fields : [
+        {label: "Name", type: "input", id: "name"},
+        {label: "Purpose", type: "textarea", id: "purpose", value: ""},
+        {label: "Creator", type: "input", id: "creator", disabled: true, value: "Todo"},
+      ]}
   }
 
   render(){
@@ -24,18 +29,9 @@ class WorldView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
-    Hello <b>${this.name}</b> from app-element
+    <liste-view name="Organizations" .shape="${this.organizationShape}"></liste-view>
+
     </div>
-
-
-    <div ?hidden = "${!this.debug}">
-    <hr>
-    Hello from<b>${this.name}</b><br>
-    debug : ${this.debug}<br>
-    config :
-    <pre> ${JSON.stringify(this.config, undefined, 2)}</pre><br>
-    </div>
-
 
     `;
   }

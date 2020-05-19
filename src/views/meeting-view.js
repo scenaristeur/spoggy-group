@@ -46,7 +46,7 @@ class MeetingView extends LitElement {
   async firstUpdated(){
     var app = this;
     this.agent = new HelloAgent(this.name);
-    console.log(this.agent)
+    //  console.log(this.agent)
     this.agent.receive = function(from, message) {
       //  console.log("messah",message)
       if (message.hasOwnProperty("action")){
@@ -64,24 +64,30 @@ class MeetingView extends LitElement {
   }
 
   async init(){
-    console.log(this.folder)
+    //  console.log(this.folder)
     if (this.folder.length > 0){
       let index = this.folder+"index.ttl#this"
-      const doc = await fetchDocument(index);
+      console.log(index)
+      try{
+        const doc = await fetchDocument(index);
 
-      console.log("doc",doc)
-      let triples = doc.getTriples()
-      console.log(triples)
-      let main = await doc.getSubject(index)
-      console.log("main",main)
-      let created = await main.getDateTime("http://purl.org/dc/elements/1.1/created")
-      console.log(created)
+        //  console.log("doc",doc)
+        let triples = doc.getTriples()
+        //console.log(triples)
+        let main = await doc.getSubject(index)
+        //  console.log("main",main)
+        let created = await main.getDateTime("http://purl.org/dc/elements/1.1/created")
+        //  console.log(created)
 
-      this.summary = await main.getLiteral("http://www.w3.org/2002/12/cal/ical#summary")
-      this.start = new Date(await main.getLiteral("http://www.w3.org/2002/12/cal/ical#dtstart")).toLocaleString()
-      this.end = new Date(await main.getLiteral("http://www.w3.org/2002/12/cal/ical#dtend")).toLocaleString()
-      this.location = await main.getLiteral("http://www.w3.org/2002/12/cal/ical#location")
-      this.comment = await main.getLiteral("http://www.w3.org/2002/12/cal/ical#comment")
+        this.summary = await main.getLiteral("http://www.w3.org/2002/12/cal/ical#summary")
+        this.start = new Date(await main.getLiteral("http://www.w3.org/2002/12/cal/ical#dtstart")).toLocaleString()
+        this.end = new Date(await main.getLiteral("http://www.w3.org/2002/12/cal/ical#dtend")).toLocaleString()
+        this.location = await main.getLiteral("http://www.w3.org/2002/12/cal/ical#location")
+        this.comment = await main.getLiteral("http://www.w3.org/2002/12/cal/ical#comment")
+
+      }catch(e){
+        console.log(e)
+      }
 
 
     }

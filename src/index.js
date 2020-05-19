@@ -20,7 +20,7 @@ import './views/indicateurs-view.js';
 import './views/projets-view.js';
 import './views/reunions-view.js';
 import './views/cercle-view.js';
-import './views/cercles-view.js';
+import './views/liste-view.js';
 import './views/pop-view.js';
 
 //VIS

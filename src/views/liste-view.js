@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
 
-class CerclesView extends LitElement {
+class ListeView extends LitElement {
 
   static get properties() {
     return {
@@ -9,8 +9,8 @@ class CerclesView extends LitElement {
       webId: {type: String},
       storage: {type: String},
       path: {type: String},
-      cercles: {type: Array},
-      circlePopHide: {type: Boolean},
+      liste: {type: Array},
+      popHide: {type: Boolean},
       shape: {type: Object},
       fc: {type: Object}
     };
@@ -18,20 +18,13 @@ class CerclesView extends LitElement {
 
   constructor() {
     super();
-    this.name = "Cercles"
+    this.name = "liste"
     this.webId = null
     this.storage = ""
     this.path = ""
-    this.circlePopHide = true
-    this.cercles = [] // ["Marketting", "Formation", "Support", "Ventes", "Developpement", "Intégration", "Exploitation", "Achats" ]
-    this.shape = {
-      name: "New Circle",
-      object_type: "Circle",
-      fields : [
-        {label: "Name", type: "input", id: "name"},
-        {label: "Purpose", type: "textarea", id: "purpose", value: "v"},
-        {label: "Super cercle", type: "input", id: "super", disabled: true, value: "Big circle, the Orga"},
-      ]}
+    this.popHide = true
+    this.liste = [] // ["Marketting", "Formation", "Support", "Ventes", "Developpement", "Intégration", "Exploitation", "Achats" ]
+    this.shape = {fields: []}
       this.fc = new SolidFileClient(solid.auth)
     }
 
@@ -41,13 +34,13 @@ class CerclesView extends LitElement {
       <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
       <div class="container-fluid border border-info rounded mt-3">
-      <h4>Cercles <i class=" btn btn-primary fas fa-plus-circle" @click="${this.circleOpen}"></i></h4>
+      <h4><a href="${this.shape.path}" target="_blank"> ${this.liste.length} ${this.shape.object_type}</a> <i class=" btn btn-primary fas fa-plus-circle" @click="${this.open}"></i></h4>
       <div style="max-height:30vh; width:100%; overflow: auto">
       <ul class="list-group">
-      ${this.cercles.sort().map((c) =>
+      ${this.liste.sort().map((c) =>
         html`
         <li class="list-group-item">
-        ${encodeURI(c.name)}
+        ${decodeURI(c.name)} <a href="${c.url+"index.ttl#this"}" target="_blank">link</a>
         </li>
         `
       )}
@@ -55,17 +48,17 @@ class CerclesView extends LitElement {
       </div>
 
       <!-- rapide pour transmettre le webId -->
-      <pop-view name="CirclePop"
+      <pop-view name="Pop"
       parent ="${this.name}"
-      .hide="${this.circlePopHide}"
+      .hide="${this.popHide}"
       .shape="${this.shape}"
       >Load popUp</pop-view>
       `;
     }
 
-    circleOpen(){
-      this.circlePopHide = !this.circlePopHide
-      console.log(this.circlePopHide)
+    open(){
+      this.popHide = !this.popHide
+      console.log(this.popHide)
     }
 
 
@@ -79,7 +72,7 @@ class CerclesView extends LitElement {
           //  console.log(message)
           switch(message.action) {
             case "popupClose":
-            app.circlePopHide = true
+            app.popHide = true
             break;
             case "webIdChanged":
             app.webIdChanged(message.webId)
@@ -109,7 +102,7 @@ class CerclesView extends LitElement {
     //  console.log(this.path)
     this.folder = await this.fc.readFolder(this.shape.path)
     console.log("folder",this.folder)
-    this.cercles = this.folder.folders
+    this.liste = this.folder.folders
 
   }
 
@@ -139,4 +132,4 @@ class CerclesView extends LitElement {
 
 }
 
-customElements.define('cercles-view', CerclesView);
+customElements.define('liste-view', ListeView);

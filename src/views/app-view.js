@@ -15,8 +15,8 @@ class AppView extends LitElement {
     super();
     this.name = "App"
     //https://labdsurlholacracy.com/bande-dessinee-holacracy#page-54-55
-    this.levels = [ "Browser", "Triple", "Node", "Orga", "Gouv", "Cockpit", "Todo"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
-    this.level = "Triple"
+    this.levels = [ "Browser", "Triple", "Node", "World", "Orga", "Gouv", "Cockpit", "Todo"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
+    this.level = "World"
   }
 
   render(){

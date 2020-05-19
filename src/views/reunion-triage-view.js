@@ -36,7 +36,7 @@ Ce n'est pas pourtant une réunion opérationnelle ordinaire.<br>
 Elle ne se substitue pas d'ailleurs aux réunions de travail habituelles.
 Elle les complète et le rend plus efficaces.<br>
 <br>
-C'est un moement spécifique construit autour de quelques concepts clé : <br>
+C'est un moment spécifique construit autour de quelques concepts clé : <br>
 - Projet<br>
 - Action<br>
 - Triage<br>

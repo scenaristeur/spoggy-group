@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
 import { createDocument } from "tripledoc";
-import { rdf, cal, wf, dc, meeting} from 'rdf-namespaces';
+import { rdf, cal, wf, dc, meeting, vcard} from 'rdf-namespaces';
 
 
 class PopView extends LitElement {
@@ -23,7 +23,7 @@ class PopView extends LitElement {
     this.webId = null
     this.hide = false
     this.parent = "e"
-    this.shape = {}
+    this.shape = {fields : []}
   }
 
   render(){
@@ -117,18 +117,35 @@ class PopView extends LitElement {
       this.shape.fields.forEach((f, i) => {
         console.log(f)
         object.fields[f.id] = this.shadowRoot.getElementById(f.id).value.trim()
+        this.shadowRoot.getElementById(f.id).value = ""
       });
       console.log(object)
       console.log(this.shape.storage)
       console.log(this.shape.path)
+      /* exemple de group
+      @prefix : <#>.
+      @prefix n: <http://www.w3.org/2006/vcard/ns#>.
+      @prefix c: <https://angelo.veltens.org/profile/card#>.
+      @prefix c0: </profile/card#>.
+      @prefix ldp: <http://www.w3.org/ns/ldp#>.
+      @prefix n0: <inbox/567d00a0-54d2-4977-a0aa-6b8999941bc5/>.
+
+      :we a n:Group; n:fn "Demo group"; n:hasMembers c:me, c0:me; ldp:inbox n0:.
+      */
       let date =  new Date().toISOString()
       let obj_uri = this.shape.path+encodeURI(object.fields.name)+"/index.ttl"
       const objDoc = createDocument(obj_uri);
       let main_subject = objDoc.addSubject({identifier: "this"})
 
       main_subject.setRef(rdf.type, this.shape.path);
+      main_subject.setRef(rdf.type, vcard.Group);
       main_subject.setString("http://purl.org/dc/elements/1.1/created", date);
       main_subject.setRef("http://purl.org/dc/elements/1.1/author", this.shape.webId)
+      main_subject.setString("http://www.w3.org/ns/org#purpose", object.fields.purpose)
+      main_subject.setRef("http://www.w3.org/ns/org#subOrganizationOf", object.fields.parent)
+      main_subject.setRef(vcard.hasMember, this.shape.webId)
+      main_subject.setRef(vcard.hasMember, "https://spoggy-test.solid.community/profile/card#me")
+      main_subject.setRef(vcard.hasMember, "https://spoggy-test2.solid.community/profile/card#me")
       let success = await objDoc.save();
       console.log(success)
       this.agent.send(this.parent,{action: "refresh"})

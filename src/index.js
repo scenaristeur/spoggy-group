@@ -24,6 +24,7 @@ import './views/role-view.js';
 import './views/liste-view.js';
 import './views/pop-view.js';
 import './views/tension-view.js';
+import './views/element-view.js';
 
 //VIS
 import './views/vis-view.js';

@@ -26,7 +26,12 @@ class TensionView extends LitElement {
         {label: "One word related to this tension", type: "input", id: "name", value: ""},
         {label: "What is ?", type: "textarea", id: "wi", value: ""},
         {label: "What should be ?", type: "textarea", id: "wsb", value: ""},
-        {label: "Proposition :", type: "textarea", id: "proposition", value: ""},
+        {label: "Proposition", type: "textarea", id: "proposition", value: ""},
+        {label: "Attributed to", type: "select",
+         id: "attributedTo",
+          source:"https://holacracy.solid.community/public/spoggy/Role/",
+          add: true, value: ""},
+
       ]}
   }
 
@@ -36,9 +41,10 @@ class TensionView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
-    url : ${this.url}
-
     <liste-view name="Tensions" .shape="${this.tensionShape}"></liste-view>
+
+
+    <element-view name="TensionElement" url="${this.url}" .shape="${this.tensionShape}"></element-view>
 
     </div>
 

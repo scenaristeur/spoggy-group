@@ -26,11 +26,13 @@ class RoleView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
-    Hello <b>${this.name}</b> from app-element <br>
-    url ${this.url}
-
     [list of tensions that this role must process]<br>
     [list of tensions that this role has created]<br>
+
+    <div class="row">
+    <a href="${this.url}" target="_blank">${this.url}</a>
+    </div>
+    
     </div>
 
 

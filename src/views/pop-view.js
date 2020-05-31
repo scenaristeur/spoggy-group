@@ -211,7 +211,7 @@ class PopView extends LitElement {
           if (object.fields.attributedTo.length>0){
             main_subject.setRef("https://www.w3.org/ns/activitystreams#attributedTo", object.fields.attributedTo)
           }
-          if (object.fields.attributedTo_input.length>0){
+          if (object.fields.attributedTo_input != undefined && object.fields.attributedTo_input.length>0){
             main_subject.setString("https://www.w3.org/ns/activitystreams#attributedTo", object.fields.attributedTo_input+"_must_create")
           }
 

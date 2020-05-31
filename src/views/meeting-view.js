@@ -68,7 +68,7 @@ class MeetingView extends LitElement {
     if (this.folder.length > 0){
       let index = this.folder+"index.ttl#this"
       console.log(index)
-      try{
+//      try{
         const doc = await fetchDocument(index);
 
         //  console.log("doc",doc)
@@ -85,9 +85,9 @@ class MeetingView extends LitElement {
         this.location = await main.getLiteral("http://www.w3.org/2002/12/cal/ical#location")
         this.comment = await main.getLiteral("http://www.w3.org/2002/12/cal/ical#comment")
 
-      }catch(e){
+    /*  }catch(e){
         console.log(e)
-      }
+      }*/
 
 
     }

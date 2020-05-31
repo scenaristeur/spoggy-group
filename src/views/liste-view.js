@@ -25,110 +25,117 @@ class ListeView extends LitElement {
     this.popHide = true
     this.liste = [] // ["Marketting", "Formation", "Support", "Ventes", "Developpement", "Intégration", "Exploitation", "Achats" ]
     this.shape = {fields: []}
-      this.fc = new SolidFileClient(solid.auth)
-    }
+    this.fc = new SolidFileClient(solid.auth)
+  }
 
-    render(){
-      return html`
-      <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
-      <link href="css/fontawesome/css/all.css" rel="stylesheet">
+  render(){
+    return html`
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
-      <div class="container-fluid border border-info rounded mt-3">
-      <h4><a href="${this.shape.path}" target="_blank"> ${this.liste.length} ${this.shape.object_type}</a> <i class=" btn btn-primary fas fa-plus-circle" @click="${this.open}"></i></h4>
-      <div style="max-height:30vh; width:100%; overflow: auto">
-      <ul class="list-group">
-      ${this.liste.sort().map((c) =>
-        html`
-        <li class="list-group-item">
-        ${decodeURI(c.name)} <a href="${c.url+"index.ttl#this"}" target="_blank">link</a>
-        </li>
-        `
-      )}
-      </ul>
-      </div>
+    <div class="container-fluid border border-info rounded mt-3">
+    <h4><a href="${this.shape.path}" target="_blank"> ${this.liste.length} ${this.shape.object_type}</a> <i class=" btn btn-primary fas fa-plus-circle" @click="${this.open}"></i></h4>
+    <div style="max-height:30vh; width:100%; overflow: auto">
+    <ul class="list-group">
+    ${this.liste.sort().map((c) =>
+      html`
+      <li class="list-group-item"
+      url="${c.url+"index.ttl#this"}" @click="${this.changeLevel}">
+      ${decodeURI(c.name)} <a href="${c.url+"index.ttl#this"}" target="_blank">link</a>
+      </li>
+      `
+    )}
+    </ul>
+    </div>
 
-      <!-- rapide pour transmettre le webId -->
-      <pop-view name="Pop"
-      parent ="${this.name}"
-      .hide="${this.popHide}"
-      .shape="${this.shape}"
-      >Load popUp</pop-view>
-      `;
-    }
+    <!-- rapide pour transmettre le webId -->
+    <pop-view name="Pop"
+    parent ="${this.name}"
+    .hide="${this.popHide}"
+    .shape="${this.shape}">
+    Load popUp</pop-view>
+    `;
+  }
 
-    open(){
-      this.popHide = !this.popHide
-      console.log(this.popHide)
-    }
+  changeLevel(e){
+    let url = e.target.getAttribute("url")
+    console.log(url)
+    this.agent.send("App", {action: "levelChanged", level: this.shape.object_type, url: url})
+  //  this.agent.send(this.shape.object_type, {action: "urlChanged", url: url})
+  }
 
+  open(){
+    this.popHide = !this.popHide
+    console.log(this.popHide)
+  }
 
-    firstUpdated(){
-      var app = this;
-      this.agent = new HelloAgent(this.name);
-      console.log(this.agent)
-      this.agent.receive = function(from, message) {
-        //  console.log("messah",message)
-        if (message.hasOwnProperty("action")){
-          //  console.log(message)
-          switch(message.action) {
-            case "popupClose":
-            app.popHide = true
-            break;
-            case "webIdChanged":
-            app.webIdChanged(message.webId)
-            break;
-            case "refresh":
-            app.refresh()
-            break;
-            default:
-            console.log("Unknown action ",message)
-          }
+  firstUpdated(){
+    var app = this;
+    this.agent = new HelloAgent(this.name);
+    console.log(this.agent)
+    this.agent.receive = function(from, message) {
+      //  console.log("messah",message)
+      if (message.hasOwnProperty("action")){
+        //  console.log(message)
+        switch(message.action) {
+          case "popupClose":
+          app.popHide = true
+          break;
+          case "webIdChanged":
+          app.webIdChanged(message.webId)
+          break;
+          case "refresh":
+          app.refresh()
+          break;
+          default:
+          console.log("Unknown action ",message)
         }
-      };
-      this.init()
-    }
-
-    init(){
-
-      this.shape.storage = "somewhere"
-    }
-
-    /*
-    new(object){
-    console.log("must store ",object)
-  }*/
-  async refresh(){
-
-    //  console.log(this.path)
-    this.folder = await this.fc.readFolder(this.shape.path)
-    console.log("folder",this.folder)
-    this.liste = this.folder.folders
-
-  }
-
-  async webIdChanged(webId){
-    this.webId = webId
-    if (webId != null){
-      console.log(this.webId)
-      this.shape.webId = webId
-      let storage = await solid.data[webId].storage
-      this.shape.storage = `${storage}`
-      //    console.log(this.storage)
-      this.shape.path = this.shape.storage+"public/spoggy/"+this.shape.object_type+"/"
-
-      this.refresh()
-      if( !(await this.fc.itemExists(this.shape.path)) ) {
-        await this.fc.createFolder(this.shape.path) // only create if it doesn't already exist
       }
-    }else{
-      this.shape.storage = ""
-      this.shape.path = ""
-      this.shape.webId = null
-
-      //  this.agent.send("CirclePop", {action: "currentFileChanged", currentFile: this.currentFile})
-    }
-
+    };
+    this.init()
   }
+
+  init(){
+
+    this.shape.storage = "somewhere"
+  }
+
+  /*
+  new(object){
+  console.log("must store ",object)
+}*/
+async refresh(){
+
+  //  console.log(this.path)
+  this.folder = await this.fc.readFolder(this.shape.path)
+  console.log("folder",this.folder)
+  this.liste = this.folder.folders
+
+}
+
+async webIdChanged(webId){
+  this.webId = webId
+  if (webId != null){
+    console.log(this.webId)
+    this.shape.webId = webId
+    let storage = await solid.data[webId].storage
+    this.shape.storage = `${storage}`
+    //    console.log(this.storage)
+    this.shape.path = this.shape.storage+"public/spoggy/"+this.shape.object_type+"/"
+
+    this.refresh()
+    if( !(await this.fc.itemExists(this.shape.path)) ) {
+      await this.fc.createFolder(this.shape.path) // only create if it doesn't already exist
+    }
+  }else{
+    this.shape.storage = ""
+    this.shape.path = ""
+    this.shape.webId = null
+
+    //  this.agent.send("CirclePop", {action: "currentFileChanged", currentFile: this.currentFile})
+  }
+
+}
 
 }
 

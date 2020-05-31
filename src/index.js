@@ -19,9 +19,11 @@ import './views/checklists-view.js';
 import './views/indicateurs-view.js';
 import './views/projets-view.js';
 import './views/reunions-view.js';
-import './views/cercle-view.js';
+import './views/circle-view.js';
+import './views/role-view.js';
 import './views/liste-view.js';
 import './views/pop-view.js';
+import './views/tension-view.js';
 
 //VIS
 import './views/vis-view.js';

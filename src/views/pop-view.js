@@ -132,22 +132,50 @@ class PopView extends LitElement {
 
       :we a n:Group; n:fn "Demo group"; n:hasMembers c:me, c0:me; ldp:inbox n0:.
       */
-      let date =  new Date().toISOString()
-      let obj_uri = this.shape.path+encodeURI(object.fields.name)+"/index.ttl"
-      const objDoc = createDocument(obj_uri);
-      let main_subject = objDoc.addSubject({identifier: "this"})
+      let now = new Date()
+      let date =  now.toISOString()
+      let obj_uri =""
+      let objDoc = {}
+      let main_subject = {}
+
+      switch (this.shape.object_type) {
+        case "Tension":
+        obj_uri = this.shape.path+encodeURI(object.fields.name)+"_"+now.getTime()+"/index.ttl"
+        objDoc = createDocument(obj_uri);
+        main_subject = objDoc.addSubject({identifier: "this"})
+        main_subject.setRef(rdf.type, this.shape.path);
+
+        main_subject.setString("http://www.w3.org/ns/hola#whatIs", object.fields.wi)
+        main_subject.setString("http://www.w3.org/ns/hola#whatShouldBe", object.fields.wsb)
+        main_subject.setString("http://www.w3.org/ns/hola#proposition", object.fields.proposition)
+
+        break;
+
+        case "Organization":
+        case "Circle":
+        case "Role":
+        obj_uri = this.shape.path+encodeURI(object.fields.name)+"/index.ttl"
+        objDoc = createDocument(obj_uri);
+        main_subject = objDoc.addSubject({identifier: "this"})
+
+        main_subject.setRef(rdf.type, vcard.Group);
+        main_subject.setString("http://www.w3.org/ns/org#purpose", object.fields.purpose)
+        main_subject.setRef("http://www.w3.org/ns/org#subOrganizationOf", object.fields.parent)
+        main_subject.setRef(vcard.hasMember, this.shape.webId)
+        main_subject.setRef(vcard.hasMember, "https://spoggy-test.solid.community/profile/card#me")
+        main_subject.setRef(vcard.hasMember, "https://spoggy-test2.solid.community/profile/card#me")
+        break;
+        default:
+        console.log("I don't know what to do with this shape")
+      }
 
       main_subject.setRef(rdf.type, this.shape.path);
-      main_subject.setRef(rdf.type, vcard.Group);
       main_subject.setString("http://purl.org/dc/elements/1.1/created", date);
       main_subject.setRef("http://purl.org/dc/elements/1.1/author", this.shape.webId)
-      main_subject.setString("http://www.w3.org/ns/org#purpose", object.fields.purpose)
-      main_subject.setRef("http://www.w3.org/ns/org#subOrganizationOf", object.fields.parent)
-      main_subject.setRef(vcard.hasMember, this.shape.webId)
-      main_subject.setRef(vcard.hasMember, "https://spoggy-test.solid.community/profile/card#me")
-      main_subject.setRef(vcard.hasMember, "https://spoggy-test2.solid.community/profile/card#me")
+
       let success = await objDoc.save();
       console.log(success)
+      console.log("parent",this.parent)
       this.agent.send(this.parent,{action: "refresh"})
       this.close()
     }

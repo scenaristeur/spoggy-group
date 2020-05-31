@@ -7,7 +7,8 @@ class AppView extends LitElement {
     return {
       name: {type: String},
       levels: {type: Array},
-      level: {type: String}
+      level: {type: String},
+      url: {type: String}
     };
   }
 
@@ -15,8 +16,9 @@ class AppView extends LitElement {
     super();
     this.name = "App"
     //https://labdsurlholacracy.com/bande-dessinee-holacracy#page-54-55
-    this.levels = [ "Browser", "Triple", "Node", "World", "Orga", "Gouv", "Cockpit", "Todo"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
+    this.levels = [ "Browser", "Triple", "Node", "World", "Organization", "Tension", "Gouv", "Cockpit", "Todo"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
     this.level = "World"
+    this.url = ""
   }
 
   render(){
@@ -45,9 +47,12 @@ class AppView extends LitElement {
 
       <todo-view name="Todo" ?hidden="${this.level != "Todo"}"></todo-view>
       <world-view name="World" ?hidden="${this.level != "World"}"></world-view>
-      <organization-view name="Organization" ?hidden="${this.level != "Orga"}"></organization-view>
+      <organization-view name="Organization" url="${this.url}" ?hidden="${this.level != "Organization"}"></organization-view>
       <gouvernance-meeting-view name="Gouvernance" ?hidden="${this.level != "Gouv"}"></gouvernance-meeting-view>
       <cockpit-view name="Cockpit" ?hidden="${this.level != "Cockpit"}"></cockpit-view>
+      <circle-view name="Circle" url="${this.url}" ?hidden="${this.level != "Circle"}"></circle-view>
+      <role-view name="Role" url="${this.url}" ?hidden="${this.level != "Role"}"></role-view>
+      <tension-view name="Tension" url="${this.url}" ?hidden="${this.level != "Tension"}"></tension-view>
 
       </div>
       </div>
@@ -90,6 +95,8 @@ firstUpdated(){
       switch(message.action) {
         case "levelChanged":
         app.level = message.level
+        app.url = message.url
+        console.log(app.level)
         break;
         default:
         console.log("Unknown action ",message)

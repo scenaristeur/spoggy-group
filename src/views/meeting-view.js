@@ -67,7 +67,7 @@ class MeetingView extends LitElement {
     //  console.log(this.folder)
     if (this.folder.length > 0){
       let index = this.folder+"index.ttl#this"
-      console.log(index)
+    //  console.log(index)
 //      try{
         const doc = await fetchDocument(index);
 

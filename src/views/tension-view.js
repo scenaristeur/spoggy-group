@@ -43,9 +43,6 @@ class TensionView extends LitElement {
     <div class="container-fluid">
     <liste-view name="Tensions" .shape="${this.tensionShape}"></liste-view>
 
-
-    <element-view name="TensionElement" url="${this.url}" .shape="${this.tensionShape}"></element-view>
-
     </div>
 
 

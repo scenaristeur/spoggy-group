@@ -108,7 +108,7 @@ async refresh(){
 
   //  console.log(this.path)
   this.folder = await this.fc.readFolder(this.shape.path)
-  console.log("folder",this.folder)
+//  console.log("folder",this.folder)
   this.liste = this.folder.folders
 
 }

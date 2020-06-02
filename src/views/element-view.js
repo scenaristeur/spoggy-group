@@ -7,9 +7,6 @@ class ElementView extends LitElement {
   static get properties() {
     return {
       name: {type: String},
-      debug: {type: Boolean},
-      config: {type: Object},
-      shape: {type: Object},
       url: {type: String}
     };
   }
@@ -17,10 +14,7 @@ class ElementView extends LitElement {
   constructor() {
     super();
     this.name = "element view"
-    this.debug = true
-    this.config = {}
     this.url = ""
-    this.shape = {}
   }
 
   render(){
@@ -31,19 +25,8 @@ class ElementView extends LitElement {
     <div class="container-fluid">
     <a href="${this.url}" target="_blank">${this.url}</a>
     <ul id="proplist">
-    <li>click on an item in the list to see the details</li>
+  <!--  <li>click on an item in the list to see the details</li>-->
     </ul>
-
-
-    <div ?hidden = "${!this.debug}">
-    <hr>
-    Hello from<b>${this.name}</b><br>
-    debug : ${this.debug}<br>
-    shape :
-    <pre> ${JSON.stringify(this.shape, undefined, 2)}</pre><br>
-    </div>
-
-
     `;
   }
 
@@ -110,11 +93,6 @@ class ElementView extends LitElement {
     var ln = str.substring(str.lastIndexOf('#')+1);
     ln == str ? ln = str.substring(str.lastIndexOf('/')+1) : "";
     return ln
-  }
-
-  configChanged(config){
-    this.config = config
-    console.log(this.config)
   }
 
 }

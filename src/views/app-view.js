@@ -16,7 +16,9 @@ class AppView extends LitElement {
     super();
     this.name = "App"
     //https://labdsurlholacracy.com/bande-dessinee-holacracy#page-54-55
-    this.levels = [ "Browser", "Triple", "Node", "World", "Organization", "Tension", "Gouv", "Cockpit", "Todo"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
+    this.levels = [ "Browser", "Triple",
+    "Node", "World", "Organization",
+     "Tension", "Gouv", "Cockpit", "Todo", "User", "Profile"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
     this.level = "World"
     this.url = ""
   }
@@ -45,6 +47,11 @@ class AppView extends LitElement {
       <input-view name="Input" ?hidden="${this.level != "Triple"}"></input-view>
       <selected-view name="Selected" ?hidden="${this.level != "Node"}"></selected-view>
 
+
+      <div class="row">
+      <element-view name="ElementView" url="${this.url}"></element-view>
+      </div>
+
       <todo-view name="Todo" ?hidden="${this.level != "Todo"}"></todo-view>
       <world-view name="World" ?hidden="${this.level != "World"}"></world-view>
       <organization-view name="Organization" url="${this.url}" ?hidden="${this.level != "Organization"}"></organization-view>
@@ -53,6 +60,10 @@ class AppView extends LitElement {
       <circle-view name="Circle" url="${this.url}" ?hidden="${this.level != "Circle"}"></circle-view>
       <role-view name="Role" url="${this.url}" ?hidden="${this.level != "Role"}"></role-view>
       <tension-view name="Tension" url="${this.url}" ?hidden="${this.level != "Tension"}"></tension-view>
+      <user-view name="User" url="${this.url}" ?hidden="${this.level != "User"}"></user-view>
+
+      <profile-view name="Profile" url="${this.url}" ?hidden="${this.level != "Profile"}"></profile-view>
+
 
       </div>
       </div>

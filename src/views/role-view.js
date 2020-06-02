@@ -28,11 +28,15 @@ class RoleView extends LitElement {
     <div class="container-fluid">
     [list of tensions that this role must process]<br>
     [list of tensions that this role has created]<br>
+    [purpose]<br>
+    [redevabilities]<br>
+    [domains]<br>
+    [ people that enroll this role]<button class="btn btn-outline-primary" @click="${this.enroll}">Enroll</button>
 
     <div class="row">
     <a href="${this.url}" target="_blank">${this.url}</a>
     </div>
-    
+
     </div>
 
 

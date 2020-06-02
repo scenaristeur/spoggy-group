@@ -25,6 +25,8 @@ import './views/liste-view.js';
 import './views/pop-view.js';
 import './views/tension-view.js';
 import './views/element-view.js';
+import './views/user-view.js';
+import './views/profile-view.js';
 
 //VIS
 import './views/vis-view.js';

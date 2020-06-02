@@ -89,12 +89,17 @@ class ElementView extends LitElement {
 
   localName(strPromise){
     let str = `${strPromise}`
-    if (str.charAt(str.length - 1) == '/') {
-      str = str.substr(0, str.length - 1);
+    let ln = ""
+    if (str.startsWith('"')) {
+      ln = str
+    }else{
+      if (str.endsWith("/")) str = str.slice(0, -1)
+      if(str.endsWith("/index.ttl#this")) str = str.slice(0, -15)
+      if(str.endsWith("#me")) str = str.split("/")[2].split('.')[0];
+      ln = str.substring(str.lastIndexOf('#')+1);
+      ln == str ? ln = str.substring(str.lastIndexOf('/')+1) : "";
     }
-    var ln = str.substring(str.lastIndexOf('#')+1);
-    ln == str ? ln = str.substring(str.lastIndexOf('/')+1) : "";
-    return ln
+    return decodeURI(ln)
   }
 
 }

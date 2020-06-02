@@ -148,24 +148,33 @@ class PopView extends LitElement {
 
 
       async getOptions(field){
-        let folder = await this.fc.readFolder(field.source)
-        console.log("folder",folder)
-        let folders = folder.folders
-
-        console.log("Folders", folders)
         var x = this.shadowRoot.getElementById(field.id);
         var option = document.createElement("option");
         option.text = "";
         option.value = ""
         x.add(option);
-        folders.forEach((item, i) => {
+if (field.source != undefined && field.source.length > 0){
+        let folder = await this.fc.readFolder(field.source)
+        console.log("folder",folder)
+        let folders = folder.folders
+        console.log("Folders", folders)
+        folders.forEach(item => {
           var option = document.createElement("option");
           option.text = decodeURI(item.name);
           option.value = item.url
           x.add(option);
         });
+      }
+      if (field.values != undefined && field.values.length > 0){
+        field.values.forEach(item=> {
+          var option = document.createElement("option");
+          option.text = decodeURI(item);
+          option.value = item
+          x.add(option);
+          if (item == field.selected) option.selected = true
+        });
 
-
+      }
 
       }
 
@@ -210,6 +219,7 @@ class PopView extends LitElement {
           main_subject.setString("http://www.w3.org/ns/hola#whatIs", object.fields.wi)
           main_subject.setString("http://www.w3.org/ns/hola#whatShouldBe", object.fields.wsb)
           main_subject.setString("http://www.w3.org/ns/hola#proposition", object.fields.proposition)
+          main_subject.setString("http://www.w3.org/ns/hola#status", object.fields.status)
           if (object.fields.attributedTo.length>0){
             main_subject.setRef("https://www.w3.org/ns/activitystreams#attributedTo", object.fields.attributedTo)
           }

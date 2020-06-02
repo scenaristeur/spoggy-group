@@ -31,7 +31,7 @@ class TensionView extends LitElement {
          id: "attributedTo",
           source:"https://holacracy.solid.community/public/spoggy/Role/",
           add: true, value: ""},
-
+          {label: "Status", type: "select", id: "status", values: ["new", "pending", "delayed", "done"], selected: "new"},
       ]}
   }
 

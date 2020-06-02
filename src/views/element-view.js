@@ -7,7 +7,8 @@ class ElementView extends LitElement {
   static get properties() {
     return {
       name: {type: String},
-      url: {type: String}
+      url: {type: String},
+      elementName: {type: String}
     };
   }
 
@@ -15,6 +16,7 @@ class ElementView extends LitElement {
     super();
     this.name = "element view"
     this.url = ""
+    this.elementName = ""
   }
 
   render(){
@@ -23,9 +25,9 @@ class ElementView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
-    <a href="${this.url}" target="_blank">${this.url}</a>
+    <h3><a href="${this.url}" target="_blank">${this.elementName}</a></h3>
     <ul id="proplist">
-  <!--  <li>click on an item in the list to see the details</li>-->
+    <!--  <li>click on an item in the list to see the details</li>-->
     </ul>
     `;
   }
@@ -62,11 +64,11 @@ class ElementView extends LitElement {
   }
 
   async init(){
-
-
     if (this.url != undefined && this.url.length > 0){
       let proplist = this.shadowRoot.getElementById("proplist")
       proplist.innerHTML = "<li>Loading Element</li>"
+      this.elementName = decodeURI(this.url.split("/").slice(-2)[0])
+
       const doc = await fetchDocument(this.url);
       /* 2. Read the Subject representing the current user's profile: */
       const subj = doc.getSubject(this.url);
@@ -88,8 +90,8 @@ class ElementView extends LitElement {
   localName(strPromise){
     let str = `${strPromise}`
     if (str.charAt(str.length - 1) == '/') {
-  str = str.substr(0, str.length - 1);
-}
+      str = str.substr(0, str.length - 1);
+    }
     var ln = str.substring(str.lastIndexOf('#')+1);
     ln == str ? ln = str.substring(str.lastIndexOf('/')+1) : "";
     return ln

@@ -12,7 +12,8 @@ class ListeView extends LitElement {
       liste: {type: Array},
       popHide: {type: Boolean},
       shape: {type: Object},
-      fc: {type: Object}
+      fc: {type: Object},
+      parent: {type: String}
     };
   }
 
@@ -26,6 +27,7 @@ class ListeView extends LitElement {
     this.liste = [] // ["Marketting", "Formation", "Support", "Ventes", "Developpement", "Intégration", "Exploitation", "Achats" ]
     this.shape = {fields: []}
     this.fc = new SolidFileClient(solid.auth)
+    this.parent = ""
   }
 
   render(){
@@ -34,14 +36,19 @@ class ListeView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid border border-info rounded mt-3">
-    <h4><a href="${this.shape.path}" target="_blank"> ${this.liste.length} ${this.shape.object_type}</a> <i class=" btn btn-primary fas fa-plus-circle" @click="${this.open}"></i></h4>
+    <h4>
+    <a href="${this.shape.path}" target="_blank"> ${this.liste.length} ${this.shape.object_type}</a>
+     <i class=" btn btn-primary fas fa-plus-circle" @click="${this.open}"></i>
+     </h4>
+
     <div style="max-height:30vh; width:100%; overflow: auto">
     <ul class="list-group">
+
     ${this.liste.sort().map((c) =>
       html`
       <li class="list-group-item"
       url="${c.url+"index.ttl#this"}" @click="${this.changeLevel}">
-      ${decodeURI(c.name)} <a href="${c.url+"index.ttl#this"}" target="_blank">link</a>
+      ${decodeURI(c.name)}
       </li>
       `
     )}
@@ -61,10 +68,11 @@ class ListeView extends LitElement {
     let url = e.target.getAttribute("url")
     console.log(url)
     this.agent.send("App", {action: "levelChanged", level: this.shape.object_type, url: url})
-  //  this.agent.send(this.shape.object_type, {action: "urlChanged", url: url})
+    //  this.agent.send(this.shape.object_type, {action: "urlChanged", url: url})
   }
 
   open(){
+      this.shape.parent = this.parent
     this.popHide = !this.popHide
     console.log(this.popHide)
   }
@@ -72,7 +80,7 @@ class ListeView extends LitElement {
   firstUpdated(){
     var app = this;
     this.agent = new HelloAgent(this.name);
-    console.log(this.agent)
+  //  console.log(this.agent)
     this.agent.receive = function(from, message) {
       //  console.log("messah",message)
       if (message.hasOwnProperty("action")){
@@ -96,7 +104,6 @@ class ListeView extends LitElement {
   }
 
   init(){
-
     this.shape.storage = "somewhere"
   }
 
@@ -108,7 +115,7 @@ async refresh(){
 
   //  console.log(this.path)
   this.folder = await this.fc.readFolder(this.shape.path)
-//  console.log("folder",this.folder)
+  //  console.log("folder",this.folder)
   this.liste = this.folder.folders
 
 }

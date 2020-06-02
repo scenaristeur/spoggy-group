@@ -25,7 +25,7 @@ class CircleView extends LitElement {
       fields : [
         {label: "Name", type: "input", id: "name"},
         {label: "Purpose", type: "textarea", id: "purpose", value: ""},
-        {label: "Super cercle", type: "input", id: "parent", value: "ACircle"},
+        {label: "Cercle", type: "input", id:"parent", value:""}
       ]}
     }
 
@@ -46,11 +46,7 @@ class CircleView extends LitElement {
       <li>2nd Lien</li>
       </ul>
 
-      <liste-view name="Roles" .shape="${this.roleShape}"></liste-view>
-
-      <div class="row">
-      <a href="${this.url}" target="_blank">${this.url}</a>
-      </div>
+      <liste-view name="Roles" .shape="${this.roleShape}"  parent="${this.url}"></liste-view>
 
       </div>
 

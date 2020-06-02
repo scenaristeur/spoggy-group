@@ -33,6 +33,7 @@ class OrganizationView extends LitElement {
       fields : [
         {label: "Name", type: "input", id: "name"},
         {label: "Purpose", type: "textarea", id: "purpose", value: ""},
+        {label: "Super Cercle", type: "input", id:"parent", value:""}
         //  {label: "Cercle", type: "input", id: "parent", disabled: true, value: "Todo"},
       ]}
 
@@ -43,22 +44,7 @@ class OrganizationView extends LitElement {
       <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
       <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
-      <div class="container-fluid">
-      <h4>Organization Name</h4>
-      <p>Organization purpose</p>
-      <p>Organization creator</p>
-      <p>Organization members ?</p>
-
-
-
-      <liste-view name="Cercles" .shape="${this.circleShape}"></liste-view>
-
-      <div class="row">
-      <a href="${this.url}" target="_blank">${this.url}</a>
-      </div>
-
-      </div>
-
+      <liste-view name="Cercles" .shape="${this.circleShape}" parent="${this.url}"></liste-view>
 
       <div ?hidden = "${!this.debug}">
       <hr>

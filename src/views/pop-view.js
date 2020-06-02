@@ -22,7 +22,7 @@ class PopView extends LitElement {
     this.name = "Pop"
     this.webId = null
     this.hide = false
-    this.parent = "unknown parent"
+    this.parent = ""
     this.shape = {fields : []}
     this.fc = new SolidFileClient(solid.auth)
 
@@ -73,7 +73,9 @@ class PopView extends LitElement {
 
     htmlElmement(field){
       let element = document.createElement(field.type)
-
+      if (field.id == "parent"){
+        field.value = this.shape.parent
+      }
 
       switch (field.type) {
         case "input":
@@ -175,7 +177,7 @@ class PopView extends LitElement {
           if (f.add = true && object.fields[f.id] == ""){
             let input_id = f.id+"_input"
             object.fields[input_id] = this.shadowRoot.getElementById(input_id).value.trim()
-              this.shadowRoot.getElementById(input_id).value = ""
+            this.shadowRoot.getElementById(input_id).value = ""
           }
           this.shadowRoot.getElementById(f.id).value = ""
         });
@@ -255,7 +257,7 @@ class PopView extends LitElement {
       firstUpdated(){
         var app = this;
         this.agent = new HelloAgent(this.name);
-        console.log(this.agent)
+      //  console.log(this.agent)
         this.agent.receive = function(from, message) {
           //  console.log("messah",message)
           if (message.hasOwnProperty("action")){

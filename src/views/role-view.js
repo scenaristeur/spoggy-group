@@ -33,9 +33,6 @@ class RoleView extends LitElement {
     [domains]<br>
     [ people that enroll this role]<button class="btn btn-outline-primary" @click="${this.enroll}">Enroll</button>
 
-    <div class="row">
-    <a href="${this.url}" target="_blank">${this.url}</a>
-    </div>
 
     </div>
 

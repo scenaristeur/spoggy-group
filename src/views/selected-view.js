@@ -23,8 +23,13 @@ class SelectedView extends LitElement {
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
 
     <div ?hidden="${this.selected_nodes.length == 0}">
+    <div class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search (todo)" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </div>
     <hr>
     <b>${this.selected_nodes.length} nodes.</b>
+     <button class="btn btn-sm btn-outline-primary" disabled>Expand (todo)</button>
     <hr>
     ${this.selected_nodes.map((n, i) =>
       html`

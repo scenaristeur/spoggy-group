@@ -81,7 +81,7 @@ class BrowserView extends LitElement {
       html`
       <li class="list-group-item" url="${f.url}" type="${f.type}" @click="${this.changePath}">
       <i class="fas fa-folder"></i>
-      ${f.name}</li>
+      ${decodeURI(f.name)}</li>
       `
     )}
     </ul>
@@ -94,7 +94,7 @@ class BrowserView extends LitElement {
       <div class="btn-group" role="group" aria-label="First group">
       <div class="text-outline-secondary" url="${f.url}" type="${f.type}" @click="${this.changePath}">
       <i class="fas fa-file" url="${f.url}" type="${f.type}" @click="${this.changePath}"></i>
-      ${f.name}
+      ${decodeURI(f.name)}
       </div>
       </div>
 

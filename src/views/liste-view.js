@@ -104,7 +104,7 @@ class ListeView extends LitElement {
   }
 
   init(){
-    this.shape.storage = "somewhere"
+    this.shape.storage = "somewhere, must add webidChanged to element in login"
   }
 
   /*

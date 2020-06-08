@@ -8,7 +8,8 @@ class ElementView extends LitElement {
     return {
       name: {type: String},
       url: {type: String},
-      elementName: {type: String}
+      elementName: {type: String},
+      propListHide: {type: Boolean}
     };
   }
 
@@ -17,6 +18,7 @@ class ElementView extends LitElement {
     this.name = "element view"
     this.url = ""
     this.elementName = ""
+    this.propListHide = true
   }
 
   render(){
@@ -25,11 +27,16 @@ class ElementView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
-    <h3><a href="${this.url}" target="_blank">${this.elementName}</a></h3>
-    <ul id="proplist">
+    <h3><a href="${this.url}" target="_blank">${this.elementName}</a>
+    <button class="btn btn-primary far fa-eye" @click="${this.toggleProplist}"></button></h3>
+    <ul id="proplist" class="list-group" ?hidden="${this.propListHide}">
     <!--  <li>click on an item in the list to see the details</li>-->
     </ul>
     `;
+  }
+
+  toggleProplist(){
+    this.propListHide = !this.propListHide
   }
 
   firstUpdated(){
@@ -60,7 +67,7 @@ class ElementView extends LitElement {
         await app.init()
       }
     });
-    return changedProperties.has('url');
+    return changedProperties.has('url') || changedProperties.has('propListHide');
   }
 
   async init(){
@@ -79,8 +86,33 @@ class ElementView extends LitElement {
       proplist.innerHTML = ""
       st.forEach((item, i) => {
         let li = document.createElement("LI")
-        var textnode = document.createTextNode(this.localName(item.subject.id)+" -> "+this.localName(item.predicate.id)+" -> "+this.localName(item.object.id));         // Create a text node
-        li.appendChild(textnode);                              // Append the text to <li>
+        li.classList.add('list-group-item');
+
+        if (item.subject.id != this.url){
+          let s = document.createElement("SPAN")
+          li.appendChild(s);
+          var s_text= document.createTextNode(this.localName(item.subject.id)+" -> ");
+          s.appendChild(s_text);
+        }
+
+        let p = document.createElement("SPAN")
+        li.appendChild(p);
+        var p_text= document.createTextNode(this.localName(item.predicate.id)+" -> ");
+        p.appendChild(p_text);
+
+        let o = document.createElement("SPAN")
+        li.appendChild(o);
+        var o_text= document.createTextNode(this.localName(item.object.id));
+
+        if (item.object.id.startsWith("http")){
+          o_text = document.createElement("A")
+          var t = document.createTextNode(this.localName(item.object.id));
+          o_text.setAttribute("href", item.object.id);
+          o_text.setAttribute("target", "_blank");
+          o_text.appendChild(t);
+        }
+        o.appendChild(o_text);
+        
         proplist.appendChild(li);
 
       });

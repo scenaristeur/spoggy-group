@@ -21,12 +21,16 @@ import './views/projets-view.js';
 import './views/reunions-view.js';
 import './views/circle-view.js';
 import './views/role-view.js';
+import './views/domain-view.js';
+import './views/redevability-view.js';
 import './views/liste-view.js';
 import './views/pop-view.js';
 import './views/tension-view.js';
 import './views/element-view.js';
 import './views/user-view.js';
 import './views/profile-view.js';
+import './views/policy-view.js';
+import './views/accountability-view.js';
 
 //VIS
 import './views/vis-view.js';

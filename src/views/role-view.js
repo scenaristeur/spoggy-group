@@ -8,7 +8,9 @@ class RoleView extends LitElement {
       name: {type: String},
       debug: {type: Boolean},
       config: {type: Object},
-      url: {type: String}
+      url: {type: String},
+      domainShape: {type: Object},
+      redevabilityShape: {type: Object}
     };
   }
 
@@ -18,6 +20,31 @@ class RoleView extends LitElement {
     this.debug = true
     this.config = {}
     this.url = ""
+    this.domainShape = {
+      name: "New Domaine",
+      object_type: "Domain",
+      fields: [
+        {label: "Name", type: "input", id: "name"},
+        {label: "Purpose", type: "textarea", id: "purpose", value: ""},
+        {label: "Attributed to", type: "select",
+        id: "attributedTo",
+        source:"https://holacracy.solid.community/public/spoggy/Role/",
+        add: true, value: this.url},
+
+      ]
+    },
+    this.redevabilityShape = {
+      name: "New Redevability",
+      object_type: "Redevability",
+      fields: [
+        {label: "Name", type: "input", id: "name"},
+        {label: "Purpose", type: "textarea", id: "purpose", value: ""},
+        {label: "Attributed to", type: "select",
+        id: "attributedTo",
+        source:"https://holacracy.solid.community/public/spoggy/Role/",
+        add: true, value: this.url},
+      ]
+    }
   }
 
   render(){
@@ -30,7 +57,11 @@ class RoleView extends LitElement {
     [list of tensions that this role has created]<br>
     [purpose]<br>
     [redevabilities]<br>
+    <liste-view name="Redevabilities" .shape="${this.redevabilityShape}" parent="${this.url}"></liste-view>
+
     [domains]<br>
+    <liste-view name="Domains" .shape="${this.domainShape}" parent="${this.url}"></liste-view>
+
     [ people that enroll this role]<button class="btn btn-outline-primary" @click="${this.enroll}">Enroll</button>
 
 

@@ -1,4 +1,4 @@
-importScripts("precache-manifest.e118ac9006938bd27ce3e453257c5300.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+importScripts("precache-manifest.627135adf27f927b6669cf2809559bd8.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 /* This work is licensed under the W3C Software and Document License
  * (http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document).

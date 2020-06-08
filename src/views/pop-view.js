@@ -153,28 +153,28 @@ class PopView extends LitElement {
         option.text = "";
         option.value = ""
         x.add(option);
-if (field.source != undefined && field.source.length > 0){
-        let folder = await this.fc.readFolder(field.source)
-        console.log("folder",folder)
-        let folders = folder.folders
-        console.log("Folders", folders)
-        folders.forEach(item => {
-          var option = document.createElement("option");
-          option.text = decodeURI(item.name);
-          option.value = item.url
-          x.add(option);
-        });
-      }
-      if (field.values != undefined && field.values.length > 0){
-        field.values.forEach(item=> {
-          var option = document.createElement("option");
-          option.text = decodeURI(item);
-          option.value = item
-          x.add(option);
-          if (item == field.selected) option.selected = true
-        });
+        if (field.source != undefined && field.source.length > 0){
+          let folder = await this.fc.readFolder(field.source)
+          console.log("folder",folder)
+          let folders = folder.folders
+          console.log("Folders", folders)
+          folders.forEach(item => {
+            var option = document.createElement("option");
+            option.text = decodeURI(item.name);
+            option.value = item.url
+            x.add(option);
+          });
+        }
+        if (field.values != undefined && field.values.length > 0){
+          field.values.forEach(item=> {
+            var option = document.createElement("option");
+            option.text = decodeURI(item);
+            option.value = item
+            x.add(option);
+            if (item == field.selected) option.selected = true
+          });
 
-      }
+        }
 
       }
 
@@ -243,6 +243,23 @@ if (field.source != undefined && field.source.length > 0){
           main_subject.setRef(vcard.hasMember, "https://spoggy-test.solid.community/profile/card#me")
           main_subject.setRef(vcard.hasMember, "https://spoggy-test2.solid.community/profile/card#me")
           break;
+          case "Domain":
+          case "Redevability":
+          obj_uri = this.shape.path+encodeURI(object.fields.name)+"/index.ttl"
+          objDoc = createDocument(obj_uri);
+          main_subject = objDoc.addSubject({identifier: "this"})
+          main_subject.setString("http://www.w3.org/ns/org#purpose", object.fields.purpose)
+
+          if (object.fields.attributedTo.length>0){
+            main_subject.setRef("https://www.w3.org/ns/activitystreams#attributedTo", object.fields.attributedTo)
+          }
+          if (object.fields.attributedTo_input != undefined && object.fields.attributedTo_input.length>0){
+            main_subject.setString("https://www.w3.org/ns/activitystreams#attributedTo", object.fields.attributedTo_input+"_must_create")
+          }
+
+          case "Redevability":
+          case "Accountability":
+          case "Policy":
           default:
           console.log("I don't know what to do with this shape")
         }
@@ -267,7 +284,7 @@ if (field.source != undefined && field.source.length > 0){
       firstUpdated(){
         var app = this;
         this.agent = new HelloAgent(this.name);
-      //  console.log(this.agent)
+        //  console.log(this.agent)
         this.agent.receive = function(from, message) {
           //  console.log("messah",message)
           if (message.hasOwnProperty("action")){

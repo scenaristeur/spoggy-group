@@ -18,7 +18,7 @@ class AppView extends LitElement {
     //https://labdsurlholacracy.com/bande-dessinee-holacracy#page-54-55
     this.levels = [ "Browser", "Triple",
     "Node", "World", "Organization",
-     "Tension", "Gouv", "Cockpit", "Todo", "User", "Profile"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
+    "Tension", "Gouv", "Cockpit", "Todo", "User", "Profile"] // "Pod",,"World", "Orga",  "Groups" ["World", "Organization", "Pod", "Folder", "File", "Triple", "Node" ]
     this.level = "World"
     this.url = ""
   }
@@ -64,7 +64,7 @@ class AppView extends LitElement {
 
       <profile-view name="Profile" url="${this.url}" ?hidden="${this.level != "Profile"}"></profile-view>
 
-
+      <sparql-view name="Sparql"></sparql-view>
       </div>
       </div>
 

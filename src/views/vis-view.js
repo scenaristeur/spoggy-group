@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
+import { fetchDocument } from "tripledoc";
 // import / export, voir https://github.com/scenaristeur/spoggy-simple/blob/a9c73eec43e37c736fef656a72c948dd1c453886/js/import-export.js
 
 class VisView extends LitElement {
@@ -16,7 +17,7 @@ class VisView extends LitElement {
     super();
     let face = "'Font Awesome 5 Free'"
     this.name = "Vis"
-    this.visHide = true
+    this.visHide = false
     this.groups = {
       organizations: {
         label: 'Orga',
@@ -184,8 +185,41 @@ class VisView extends LitElement {
     #edge-popUp {
       display:none;
     }
+    #node-menu {
+      display:none;
+    }
     </style>
 
+<div  id="node-menu" class="modal" tabindex="-1" role="dialog">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="edge-operation">Modal title</h5>
+<button type="button" id="edge-close" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<!--  <tr>
+<td>id</td><td><input id="node-id" value="new value" /></td>
+</tr>-->
+<div class="input-group mb-3">
+<div class="input-group-prepend">
+<span class="input-group-text" id="edgeL">Label</span>
+</div>
+<input type="text" id="edge-label" class="form-control" placeholder="Edge label" aria-label="Edge label" aria-describedby="edgeL">
+</div>
+
+</div>
+<div class="modal-footer">
+<button type="button" id="edge-saveButton" class="btn btn-primary">Save changes</button>
+<button type="button" id="edge-cancelButton"  class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+
+</div>
+</div>
+</div>
+</div>
 
     <div  id="node-popUp" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -361,11 +395,16 @@ class VisView extends LitElement {
 
       localName(strPromise){
         let str = `${strPromise}`
-        if (str.endsWith("/")) str = str.slice(0, -1)
-        if(str.endsWith("/index.ttl#this")) str = str.slice(0, -15)
-        if(str.endsWith("#me")) str = str.split("/")[2].split('.')[0];
-        var ln = str.substring(str.lastIndexOf('#')+1);
-        ln == str ? ln = str.substring(str.lastIndexOf('/')+1) : "";
+        let ln = ""
+        if (str.startsWith('"')) {
+          ln = str
+        }else{
+          if (str.endsWith("/")) str = str.slice(0, -1)
+          if(str.endsWith("/index.ttl#this")) str = str.slice(0, -15)
+          if(str.endsWith("#me")) str = str.split("/")[2].split('.')[0];
+          ln = str.substring(str.lastIndexOf('#')+1);
+          ln == str ? ln = str.substring(str.lastIndexOf('/')+1) : "";
+        }
         return decodeURI(ln)
       }
 
@@ -390,13 +429,13 @@ class VisView extends LitElement {
         if (items.length > 0){
           id = items[0].id;
           // must update the edge ?
-          console.log("trouvé "+id);
+        //  console.log("trouvé "+id);
 
         }
         //else create node and get id
         else{
           id = this.network.body.data.edges.add(edge);
-          console.log("creation "+id);
+      //    console.log("creation "+id);
         }
       }
 
@@ -558,7 +597,10 @@ class VisView extends LitElement {
 
           this.network.on("selectNode", function (params) {
             params.show = true
+              app.expand(params)
             app.sendSelected(params)
+          //  app.openMenu(params)
+
           })
 
           this.network.on("selectEdge", function (params) {
@@ -675,6 +717,64 @@ class VisView extends LitElement {
         configChanged(config){
           this.config = config
           console.log(this.config)
+        }
+
+ expand(params){
+   let app = this
+  console.log(params)
+  params.nodes.forEach(async function(item, i) {
+    console.log("Item", item)
+    if (item != undefined){
+    try{
+      const doc = await fetchDocument(item);
+        //  app.currentFileChanged(item)
+
+      //  console.log("doc",doc)
+      let triples = doc.getTriples()
+      console.log("triples",triples)
+      //  let vis_network = this.statements2vis(triples)
+      app.triplesChanged(triples)
+
+    }
+    catch(e){
+      console.log(e)
+      alert("Oh i've got a problem to read this file :-(")
+    }
+    }
+
+
+
+
+  });
+
+
+}
+
+        openMenu(params){
+          console.log("SELECTNODE",params)
+          if (params.nodes.length == 1) {
+    if (this.network.isCluster(params.nodes[0]) == true) {
+      this.network.openCluster(params.nodes[0]);
+    }else{
+      let id = params.nodes[0];
+      var node = this.network.body.data.nodes.get(id);
+      console.log(node);
+      this.network.current = node;
+    //  node.label.indexOf(' ') >= 0 ? document.getElementById("input").value = '"'+node.label+'" ' : document.getElementById("input").value = node.label+' ';
+    }
+  }
+  event.preventDefault();
+  var networkTopOffset = this.shadowRoot.getElementById("mynetwork").offsetTop
+  var ord = event.pageY-networkTopOffset;
+  console.log("ORD",ord)
+
+
+          let menu = this.shadowRoot.getElementById("node-menu")
+          menu.style.display = "block"
+          menu.style.top = ord + "px"
+          menu.style.left = event.pageX + "px"
+          console.log(menu)
+
         }
 
       }

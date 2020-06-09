@@ -38,4 +38,7 @@ import './views/node-view.js';
 import './views/edge-view.js';
 import './views/selected-view.js';
 
+//Sparql
+import './views/sparql-view.js';
+
 //import './views/vis-tool-view.js';

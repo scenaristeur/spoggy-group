@@ -393,7 +393,7 @@ class BrowserView extends LitElement {
       this.shadowRoot.getElementById("create_input").setAttribute("input_type", "filename")
       this.createHidden = false
       this.currentFile = this.path+newfilename
-      this.agent.send("Vis", {action: "clear"})
+    //  this.agent.send("Vis", {action: "clear"})
       this.agent.send("Vis", {action: "currentFileChanged", currentFile: this.currentFile})
       this.updateFolder()
     }else{

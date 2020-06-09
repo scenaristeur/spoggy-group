@@ -170,7 +170,7 @@ class VisView extends LitElement {
       /*  max-width: 500px;
       min-width: 320px;
       height: 600px;*/
-      max-width: 500px;
+      max-width: 1024px;
       min-width: 320px;
       width: 100vw;
       height: 90vh;
@@ -337,6 +337,9 @@ class VisView extends LitElement {
               case "triplesChanged":
               app.triplesChanged(message.triples)
               break;
+              case "triplesSemapps":
+              app.triplesSemapps(message.triples)
+              break;
               case "addTriple":
               app.addTriple(message.triple)
               break;
@@ -389,9 +392,30 @@ class VisView extends LitElement {
         }else{
           alert("this file does not contain any triple.")
         }
-
       }
 
+      triplesSemapps(triples){
+        //from tripledoc in browser-view
+        let app = this
+        var clear = confirm("Do you want to clear the network ?");
+        clear ==  true ? this.clear() : ""
+
+        if (triples.length != 0){
+          triples.forEach((t, i) => {
+            let n_sub = {id: t.subject.value, label: app.localName(t.subject.value), title: t.subject.value}
+            app.addNodeIfNotExist(n_sub)
+            let n_obj = {id: t.object.value, label: app.localName(t.object.value), title: t.object.value}
+            app.addNodeIfNotExist(n_obj)
+            let edge = {from: n_sub.id, to: n_obj.id, label: app.localName(t.predicate.value), title: t.predicate.value}
+            /*  app.network.body.data.edges.update(edge)*/
+            this.addEdgeIfNotExist(edge)
+            this.network.fit();
+          });
+
+        }else{
+          alert("this file does not contain any triple.")
+        }
+      }
 
       localName(strPromise){
         let str = `${strPromise}`

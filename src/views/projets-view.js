@@ -7,7 +7,8 @@ class ProjetsView extends LitElement {
     return {
       name: {type: String},
       debug: {type: Boolean},
-      projets: {type: Boolean}
+      projets: {type: Array},
+      projetShape: {type: Object}
     };
   }
 
@@ -21,7 +22,20 @@ class ProjetsView extends LitElement {
       "Bling a Bloup",
       "Ring a swing",
       "have a cigar",
-      "Crazy diamond shine on you"]
+      "Crazy diamond shine on you"],
+      this.projetShape = {
+        name: "New Projet",
+        object_type: "Projet",
+        fields: [
+          {label: "Name", type: "input", id: "name"},
+          {label: "Purpose", type: "textarea", id: "purpose", value: ""},
+          {label: "Attributed to", type: "select",
+          id: "attributedTo",
+          source:"https://holacracy.solid.community/public/spoggy/Role/",
+          add: true, value: this.url},
+
+        ]
+      }
     }
 
     render(){
@@ -30,6 +44,10 @@ class ProjetsView extends LitElement {
       <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
       <div class="container-fluid border border-info rounded mt-3">
+
+<liste-view name="Projets" .shape="${this.projetShape}" parent="${this.url}"></liste-view>
+
+      <hr>
       <h4>Projets <i class="fas fa-plus-circle"></i></h4>
       <div style="max-height:30vh; width:100%; overflow: auto">
       <ul class="list-group">

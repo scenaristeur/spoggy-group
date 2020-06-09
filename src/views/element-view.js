@@ -82,6 +82,7 @@ class ElementView extends LitElement {
       //  console.log(subj)
       const st = doc.getStatements()
       console.log("statements", st)
+      this.agent.send("Vis", {action: "triplesChanged", triples: st})
 
       proplist.innerHTML = ""
       st.forEach((item, i) => {
@@ -112,7 +113,7 @@ class ElementView extends LitElement {
           o_text.appendChild(t);
         }
         o.appendChild(o_text);
-        
+
         proplist.appendChild(li);
 
       });

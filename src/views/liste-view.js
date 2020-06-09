@@ -69,6 +69,7 @@ class ListeView extends LitElement {
     console.log(url)
     this.agent.send("App", {action: "levelChanged", level: this.shape.object_type, url: url})
     //  this.agent.send(this.shape.object_type, {action: "urlChanged", url: url})
+
   }
 
   open(){

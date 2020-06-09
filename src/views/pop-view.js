@@ -110,7 +110,7 @@ class PopView extends LitElement {
         break;
 
         case "select":
-        let select = this.shadowRoot.getElementById(field.id)
+        let select =  this.shadowRoot.getElementById(field.id)
         console.log("select",select)
         if(select != null){
           var length = select.options.length;
@@ -119,12 +119,13 @@ class PopView extends LitElement {
           }
         }
         element = html`
-        ${field.source}
         <div class="form-group">
         <label for="${field.id}">${field.label}</label>
         <select class="form-control" id="${field.id}">
         </select>
+        <small>${field.source}</small>
         </div>
+
         ${field.add == true ? html`
           <div class="input-group mb-3">
           <div class="input-group-prepend">
@@ -237,6 +238,10 @@ class PopView extends LitElement {
           case "Organization":
           case "Circle":
           case "Role":
+          case "Projet":
+          case "Indicateur":
+          case "CheckList":
+          case "Reunion":
           obj_uri = this.shape.path+encodeURI(object.fields.name)+"/index.ttl"
           objDoc = createDocument(obj_uri);
           main_subject = objDoc.addSubject({identifier: "this"})

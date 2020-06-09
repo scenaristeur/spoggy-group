@@ -184,7 +184,6 @@ class VisView extends LitElement {
     #edge-popUp {
       display:none;
     }
-
     </style>
 
 

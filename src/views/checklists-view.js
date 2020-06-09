@@ -7,7 +7,8 @@ class ChecklistsView extends LitElement {
     return {
       name: {type: String},
       debug: {type: Boolean},
-      checklists: {type: Array}
+      checklists: {type: Array},
+      checklistShape: {type: Object}
     };
   }
 
@@ -16,6 +17,20 @@ class ChecklistsView extends LitElement {
     this.name = "Checklists"
     this.debug = false
     this.checklists = ["one", "two", "tri", "hkuhk", "hkjhlhloih ezioi zeripoj ojpojizer pojopzer pojpezr poj^pezrt poj^pze piojprze poez^rjpo ", "bing a plop", "bnjouipoijefzf", "iuouhoiho"]
+    this.checklistShape = {
+      name: "New CheckList",
+      object_type: "CheckList",
+      fields: [
+        {label: "Name", type: "input", id: "name"},
+        {label: "Purpose", type: "textarea", id: "purpose", value: ""},
+        {label: "Attributed to", type: "select",
+        id: "attributedTo",
+        source:"https://holacracy.solid.community/public/spoggy/Role/",
+        add: true, value: this.url},
+
+      ]
+    }
+
   }
 
   render(){
@@ -24,6 +39,10 @@ class ChecklistsView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid border border-info rounded mt-3">
+
+    <liste-view name="Checklists" .shape="${this.checklistShape}" parent="${this.url}"></liste-view>
+
+
     <h4>Checklists   <i class="fas fa-plus-circle"></i></h4>
     <div style="max-height:30vh; width:100%; overflow: auto" >
     <ul class="list-group">

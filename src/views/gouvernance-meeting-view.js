@@ -204,7 +204,7 @@ class GouvernanceMeetingView extends LitElement {
       let storage = await solid.data[webId].storage
       this.storage = `${storage}`
       //    console.log(this.storage)
-      this.path = this.storage+"public/meeting/gouvernance/"
+      this.path = this.storage+"public/spoggy/Meeting/gouvernance/"
       await this.initPath()
       await this.listMeetings()
       console.log(this.path)

@@ -7,7 +7,8 @@ class IndicateursView extends LitElement {
     return {
       name: {type: String},
       debug: {type: Boolean},
-      indicateurs: {type: Array}
+      indicateurs: {type: Array},
+      indicateurShape: {type: Object}
     };
   }
 
@@ -15,6 +16,15 @@ class IndicateursView extends LitElement {
     super();
     this.name = "Indicateurs"
     this.indicateurs = [{name: "Nombre d'inscrits", value: 3}, {name: "Temps réponse support", value: 4, unite: "j" }]
+    this.indicateurShape = {
+      name: "New Indicateur",
+      object_type: "Indicateur",
+      fields: [
+        {label: "Name", type: "input", id: "name"},
+        {label: "Purpose", type: "textarea", id: "purpose", value: ""},
+{label: "Value", type: "input", id: "value", value: ""},
+      ]
+    }
   }
 
   render(){
@@ -23,6 +33,11 @@ class IndicateursView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid border border-info rounded mt-3">
+
+
+    <liste-view name="Indicateurs" .shape="${this.indicateurShape}" parent="${this.url}"></liste-view>
+
+
     <h4>Indicateurs <i class="fas fa-plus-circle"></i></h4>
     <div style="max-height:30vh; width:100%; overflow: auto">
     <ul class="list-group">

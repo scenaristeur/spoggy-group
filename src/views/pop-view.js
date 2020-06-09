@@ -152,28 +152,33 @@ class PopView extends LitElement {
         var option = document.createElement("option");
         option.text = "";
         option.value = ""
-        x.add(option);
-        if (field.source != undefined && field.source.length > 0){
-          let folder = await this.fc.readFolder(field.source)
-          console.log("folder",folder)
-          let folders = folder.folders
-          console.log("Folders", folders)
-          folders.forEach(item => {
-            var option = document.createElement("option");
-            option.text = decodeURI(item.name);
-            option.value = item.url
-            x.add(option);
-          });
-        }
-        if (field.values != undefined && field.values.length > 0){
-          field.values.forEach(item=> {
-            var option = document.createElement("option");
-            option.text = decodeURI(item);
-            option.value = item
-            x.add(option);
-            if (item == field.selected) option.selected = true
-          });
 
+        if (x != null){
+          x.add(option);
+          if (field.source != undefined && field.source.length > 0){
+            let folder = await this.fc.readFolder(field.source)
+            console.log("folder",folder)
+            let folders = folder.folders
+            console.log("Folders", folders)
+            folders.forEach(item => {
+              var option = document.createElement("option");
+              option.text = decodeURI(item.name);
+              option.value = item.url
+              x.add(option);
+            });
+          }
+          if (field.values != undefined && field.values.length > 0){
+            field.values.forEach(item=> {
+              var option = document.createElement("option");
+              option.text = decodeURI(item);
+              option.value = item
+              x.add(option);
+              if (item == field.selected) option.selected = true
+            });
+
+          }
+        }else{
+          console.log("revoir remplissage des options en erreur ",field.id)
         }
 
       }

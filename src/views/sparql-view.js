@@ -1,7 +1,6 @@
 import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
 import { fetchDocument } from "tripledoc";
-import {SparqlEndpointFetcher} from "fetch-sparql-endpoint";
 
 
 
@@ -21,11 +20,8 @@ class SparqlView extends LitElement {
   constructor() {
     super();
     this.name = "Sparql"
-    this.debug = true
+    this.debug = false
     this.params = {}
-
-    this.fetcher = new SparqlEndpointFetcher();
-    //    this.rdf = new RDFeasy(solid.auth)
   }
 
   render(){
@@ -34,10 +30,13 @@ class SparqlView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
+    <h2>test connexion semapps</h2>
     gestion sparql : <a href="http://localhost:9000/?source=http://localhost:3000/sparql/&query=SELECT%20?subject%20?predicate%20?object%20WHERE%20{?subject%20?predicate%20?object}LIMIT%2025">http://localhost:9000/?source=http://localhost:3000/sparql/&query=SELECT%20?subject%20?predicate%20?object%20WHERE%20{?subject%20?predicate%20?object}LIMIT%2025</a><br>
+  <br>
     <a href="http://localhost:9000/?source=http://localhost:3000/sparql/&query=SELECT+%3Fsubject+%3Fpredicate+%3Fobject%0AWHERE+%7B%0A++%3Fsubject+%3Fpredicate+%3Fobject.%0A++%3Fsubject+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2FfirstName%3E+%22Bob%22.%0A%7D%0A">http://localhost:9000/?source=http://localhost:3000/sparql/&query=SELECT+%3Fsubject+%3Fpredicate+%3Fobject%0AWHERE+%7B%0A++%3Fsubject+%3Fpredicate+%3Fobject.%0A++%3Fsubject+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2FfirstName%3E+%22Bob%22.%0A%7D%0A</a><br>
-    gestion source/file : http://localhost:9000/?source=https://holacracy.solid.community/public/spoggy/Organization/</a> <br>
-    ou https://holacracy.solid.community/public/spoggy/Organization/lemonade%20enthusiasts%20club/index.ttl#this
+  <br>
+    gestion source/file : <a href="http://localhost:9000/?source=https://holacracy.solid.community/public/spoggy/Organization/">http://localhost:9000/?source=https://holacracy.solid.community/public/spoggy/Organization/</a> <br>
+  <br>  ou <a href="http://localhost:9000/?source=https://holacracy.solid.community/public/spoggy/Organization/lemonade%20enthusiasts%20club/index.ttl#this">https://holacracy.solid.community/public/spoggy/Organization/lemonade%20enthusiasts%20club/index.ttl#this</a>
     </div>
 
 
@@ -84,7 +83,7 @@ class SparqlView extends LitElement {
     if (this.params.query != undefined && this.params.source != undefined){
       this.type = "endpoint"
 
-console.log("PARAMS",this.params.source)
+//console.log("PARAMS",this.params.source)
   const rawResponse = await fetch(this.params.source, {
     method: 'POST',
     headers: {
@@ -94,17 +93,8 @@ console.log("PARAMS",this.params.source)
     body: this.params.query
   });
   const triples = await rawResponse.json();
-
   console.log(triples);
-
   this.agent.send("Vis", {action: "triplesSemapps", triples: triples})
-
-
-    //  console.log("FETCHER",this.fetcher)
-    /*  const tripleStream = await this.fetcher.fetchTriples(this.params.source, 'CONSTRUCT { ?s ?p ?o } LIMIT 100');
-  tripleStream.on('data', (triple) => console.log(triple));*/
-      //  let results1 = await this.rdf.query( this.params.source, this.params.query )
-      //  console.log("RESULTS",results1)
     }
 
     switch (this.type) {

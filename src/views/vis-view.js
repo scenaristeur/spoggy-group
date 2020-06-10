@@ -189,7 +189,7 @@ class VisView extends LitElement {
       display:none;
     }
     </style>
-
+<!--
 <div  id="node-menu" class="modal" tabindex="-1" role="dialog">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
@@ -200,9 +200,7 @@ class VisView extends LitElement {
 </button>
 </div>
 <div class="modal-body">
-<!--  <tr>
-<td>id</td><td><input id="node-id" value="new value" /></td>
-</tr>-->
+
 <div class="input-group mb-3">
 <div class="input-group-prepend">
 <span class="input-group-text" id="edgeL">Label</span>
@@ -219,7 +217,7 @@ class VisView extends LitElement {
 </div>
 </div>
 </div>
-</div>
+</div>-->
 
     <div  id="node-popUp" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -357,6 +355,33 @@ class VisView extends LitElement {
         this.init()
       }
 
+stopStab(){
+  //DESACTIVATION STABIL POUR PLUS DE FLUIDITE
+  var options = {
+    physics:{
+      stabilization: false
+    },
+    edges: {
+      smooth: {
+        type: "continuous",
+        forceDirection: "none"
+      }
+    }
+  }
+  this.network.setOptions(options);
+}
+
+startStab(){
+  //REACTIVATION STABIL POUR PLUS DE FLUIDITE
+let options = {
+  physics:{
+    stabilization: true
+  }
+}
+this.network.setOptions(options);
+}
+
+
       addTriple(t){
         // from input-view
         console.log(t)
@@ -374,6 +399,7 @@ class VisView extends LitElement {
       triplesChanged(triples){
         //from tripledoc in browser-view
         let app = this
+        this.stopStab()
         var clear = confirm("Do you want to clear the network ?");
         clear ==  true ? this.clear() : ""
 
@@ -392,11 +418,13 @@ class VisView extends LitElement {
         }else{
           alert("this file does not contain any triple.")
         }
+        this.startStab()
       }
 
       triplesSemapps(triples){
         //from tripledoc in browser-view
         let app = this
+        this.stopStab()
         var clear = confirm("Do you want to clear the network ?");
         clear ==  true ? this.clear() : ""
 
@@ -415,12 +443,15 @@ class VisView extends LitElement {
         }else{
           alert("this file does not contain any triple.")
         }
+        this.startStab()
       }
 
       localName(strPromise){
         let str = `${strPromise}`
         let ln = ""
-        if (str.startsWith('"')) {
+        if (str.indexOf("^^") > -1){
+          ln = str.split("^^")[0]
+        }else if (str.startsWith('"') && str.endsWith('"')) {
           ln = str
         }else{
           if (str.endsWith("/")) str = str.slice(0, -1)
@@ -497,11 +528,12 @@ class VisView extends LitElement {
         let app = this
         let face = "'Font Awesome 5 Free'"
         var container = this.shadowRoot.getElementById('mynetwork');
-        let  centralGravityValueDefault = 0.001//, //0.001 ? A quoi sert cette valeur ?
-        let springLengthValueDefault = 220// //220 (//200 //300)
-          let  springConstantValueDefault = 0.01//, //0.01
-          let nodeDistanceValueDefault = 150//, //100 //350
-          let dampingValueDefault = 0.08
+        let  centralGravityValueDefault = 0.2//, //0.001 ? A quoi sert cette valeur ?
+        let springLengthValueDefault = 200// //220 (//200 //300)
+          let  springConstantValueDefault = 0.05//, //0.01
+          let nodeDistanceValueDefault = 200//, //100 //350
+          let dampingValueDefault = 0.09
+    
 
           let options = {
             locale: navigator.language.slice(0, 2) || "en",
@@ -570,18 +602,18 @@ class VisView extends LitElement {
                   nodeDistance: 120,
                   damping: 0.09
                 },
-                //maxVelocity: 500, //50
-                //minVelocity: 1, //0.1
+                maxVelocity: 500, //50
+                minVelocity: 1, //0.1
                 solver: 'repulsion',
-                /*stabilization: {
+                stabilization: {
                 enabled: true,
                 iterations: 1000,
                 updateInterval: 100,
                 onlyDynamicEdges: false//,
                 //  fit: true
-              },*/
-              //timestep: 0.5,
-              //adaptiveTimestep: true
+              },
+              timestep: 0.5,
+              adaptiveTimestep: true
             },
             manipulation: {
               // https://github.com/almende/vis/blob/master/examples/network/other/manipulationEditEdgeNoDrag.html
@@ -621,7 +653,7 @@ class VisView extends LitElement {
 
           this.network.on("selectNode", function (params) {
             params.show = true
-              app.expand(params)
+            //  app.expand(params)
             app.sendSelected(params)
           //  app.openMenu(params)
 

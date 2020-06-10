@@ -63,7 +63,7 @@ class ElementView extends LitElement {
     let app = this
     changedProperties.forEach(async function(oldValue, propName) {
       console.log(`${propName} changed. oldValue: ${oldValue}`);
-      if(propName == "url" && propName != undefined){
+      if(propName == "url" && app.url != undefined){
         await app.init()
       }
     });

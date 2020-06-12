@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit-element';
 import { HelloAgent } from '../agents/hello-agent.js';
+//import data from "@solid/query-ldflex";
 
 class RoleView extends LitElement {
 
@@ -10,7 +11,8 @@ class RoleView extends LitElement {
       config: {type: Object},
       url: {type: String},
       domainShape: {type: Object},
-      redevabilityShape: {type: Object}
+      redevabilityShape: {type: Object},
+      webId: {type: String}
     };
   }
 
@@ -20,6 +22,7 @@ class RoleView extends LitElement {
     this.debug = true
     this.config = {}
     this.url = ""
+    this.webId = null
     this.domainShape = {
       name: "New Domaine",
       object_type: "Domain",
@@ -53,6 +56,11 @@ class RoleView extends LitElement {
     <link href="css/fontawesome/css/all.css" rel="stylesheet">
 
     <div class="container-fluid">
+    [ people that enroll this role]<br>
+    ${this.webId}.
+    <button class="btn btn-outline-primary" @click="${this.enroll}">Enroll</button>
+    <button class="btn btn-outline-primary" @click="${this.leave}">Leave</button>
+
     [list of tensions that this role must process]<br>
     [list of tensions that this role has created]<br>
     [purpose]<br>
@@ -61,12 +69,7 @@ class RoleView extends LitElement {
 
     [domains]<br>
     <liste-view name="Domains" .shape="${this.domainShape}" parent="${this.url}"></liste-view>
-
-    [ people that enroll this role]<button class="btn btn-outline-primary" @click="${this.enroll}">Enroll</button>
-
-
     </div>
-
 
     <div ?hidden = "${!this.debug}">
     <hr>
@@ -102,6 +105,19 @@ class RoleView extends LitElement {
     `;
   }
 
+  async enroll(){
+    console.log("Enroll", this.webId, this.url)
+    await solid.data[this.url].vcard$hasMember.add(namedNode(this.webId))
+
+  }
+
+  async  leave(){
+    console.log("Leave", this.webId, this.url)
+    await solid.data[this.url].vcard$hasMember.delete(namedNode(this.webId))
+  }
+
+
+
   firstUpdated(){
     var app = this;
     this.agent = new HelloAgent(this.name);
@@ -111,8 +127,8 @@ class RoleView extends LitElement {
       if (message.hasOwnProperty("action")){
         //  console.log(message)
         switch(message.action) {
-          case "configChanged":
-          app.configChanged(message.config)
+          case "webIdChanged":
+          app.webIdChanged(message.webId)
           break;
           default:
           console.log("Unknown action ",message)
@@ -121,9 +137,9 @@ class RoleView extends LitElement {
     };
   }
 
-  configChanged(config){
-    this.config = config
-    console.log(this.config)
+  webIdChanged(webId){
+    this.webId = webId
+    console.log(this.webId)
   }
 
 }

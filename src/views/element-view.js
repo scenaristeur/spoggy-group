@@ -29,10 +29,21 @@ class ElementView extends LitElement {
     <div class="container-fluid">
     <h3><a href="${this.url}" target="_blank">${this.elementName}</a>
     <button class="btn btn-primary far fa-eye" @click="${this.toggleProplist}"></button></h3>
-    <ul id="proplist" class="list-group" ?hidden="${this.propListHide}">
+    <div id="view" ?hidden="${this.propListHide}">
+    <button class="btn btn-primary fas fa-trash" @click="${this.trash}"></button>
+    <button class="btn btn-primary fas fa-pen" @click="${this.edit}"></button>
+    <ul id="proplist" class="list-group" >
     <!--  <li>click on an item in the list to see the details</li>-->
     </ul>
+    </div>
     `;
+  }
+
+  trash(){
+    var del = confirm("Are you sure you want to delete "+this.elementName+" ?");
+    if (del == true){
+      
+    }
   }
 
   toggleProplist(){

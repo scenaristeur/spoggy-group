@@ -399,9 +399,10 @@ this.network.setOptions(options);
       triplesChanged(triples){
         //from tripledoc in browser-view
         let app = this
-        this.stopStab()
-        var clear = confirm("Do you want to clear the network ?");
-        clear ==  true ? this.clear() : ""
+      //  this.stopStab()
+      //  var clear = confirm("Do you want to clear the network ?");
+      //  clear ==  true ? this.clear() : ""
+      
 
         if (triples.length != 0){
           triples.forEach((t, i) => {
@@ -418,13 +419,13 @@ this.network.setOptions(options);
         }else{
           alert("this file does not contain any triple.")
         }
-        this.startStab()
+        //this.startStab()
       }
 
       triplesSemapps(triples){
         //from tripledoc in browser-view
         let app = this
-        this.stopStab()
+    //    this.stopStab()
         var clear = confirm("Do you want to clear the network ?");
         clear ==  true ? this.clear() : ""
 
@@ -443,7 +444,7 @@ this.network.setOptions(options);
         }else{
           alert("this file does not contain any triple.")
         }
-        this.startStab()
+      //  this.startStab()
       }
 
       localName(strPromise){
@@ -533,7 +534,7 @@ this.network.setOptions(options);
           let  springConstantValueDefault = 0.05//, //0.01
           let nodeDistanceValueDefault = 200//, //100 //350
           let dampingValueDefault = 0.09
-    
+
 
           let options = {
             locale: navigator.language.slice(0, 2) || "en",

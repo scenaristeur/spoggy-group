@@ -8,7 +8,8 @@
     "webpack-dev-server": "webpack-dev-server --history-api-fallback",
     "prod": "npm run webpack -- --env.mode production --env.presets serviceworker",
     "dev": "npm run webpack-dev-server -- --env.mode development --hot --watch",
-    "dev:sw": "npm run webpack-dev-server -- --env.mode development  --env.presets serviceworker"
+    "dev:sw": "npm run webpack-dev-server -- --env.mode development  --env.presets serviceworker",
+    "cypress:open": "cypress open"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
+    "cypress": "^4.10.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.1",
     "style-loader": "^0.21.0",

@@ -18,14 +18,7 @@ class RestElement extends LitElement {
     this.name = "Rest"
     this.debug = true
     this.config = {}
-    const rest = new SolidRest([
-      new SolidLocalStorage(),
-      //  new SolidFileStorage()
-    ])
-    console.log(rest)
-    this.runStorage( "/test-folder/test-file.ttl","<> a <#test>." ).then( ()=>{
-      this.runRest( "/test-folder/test-file.ttl","<> a <#test>." )
-    })
+
   }
 
   render(){
@@ -59,16 +52,21 @@ class RestElement extends LitElement {
     let response = await storage.putResource( file,{body:text} )
     response = await storage.getResource( file )
     this.show(await response)
+    console.log("1",await response)
   }
 
   /* This runs using src/localStorage via transpiled version of src/rest
   */
   async runRest(file,text){
     file = "app://ls"+file
+    console.log(file)
     const rest = new SolidRest([ new SolidLocalStorage() ])
+      console.log(rest)
     let response = await rest.fetch( file,{method:"PUT",body:text} )
+      console.log("KKKKKK",response)
     response = await rest.fetch( file )
-    this.show(response.status+","+await response.text())
+  //  this.show(response.status+","+await response.text())
+      console.log("FFFFF",response.text())
   }
 
   show(msg){
@@ -76,7 +74,7 @@ class RestElement extends LitElement {
     display.innerHTML = display.innerHTML + `<p>${msg}</p>`
   }
 
-  firstUpdated(){
+  async firstUpdated(){
     var app = this;
     this.agent = new HelloAgent(this.name);
     console.log(this.agent)
@@ -93,6 +91,12 @@ class RestElement extends LitElement {
         }
       }
     };
+
+    await this.runStorage( "/test-folder/test-file.ttl","<> a <#test8>.\n<> a <#test9>." ).then( ()=>{
+    //  this.runRest( "/test-folder/test-file2.ttl","<> a <#test2>." )
+    })
+  //  await     this.runRest( "/test-folder/test-file2.ttl","<> a <#test2>." )
+
   }
 
   configChanged(config){

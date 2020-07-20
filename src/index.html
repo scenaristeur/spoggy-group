@@ -49,6 +49,15 @@ if (!window.customElements) {
 <script src="./libs/rdf-easy.bundle.js"></script>-->
 
 <!-- ! DO NOT REMOVE THIS COMMENT, WE NEED ITS CLOSING MARKER -->
+
+<!-- SOlid-rest-->
+<!--<script src="./libs/solid-rest/rest.js"></script> -->
+<script src="./libs/solid-rest/localStorage.js"></script>
+<script src="./libs/solid-rest/main.js"></script>
+<!--<script src="./libs/solid-rest/file.js"></script>-->
+<!--<script src="./libs/solid-rest/file.js"></script>-->
+
+
 </head>
 
 <body>
@@ -59,12 +68,51 @@ if (!window.customElements) {
 </nav>-->
 <main>
 
-  <app-view>
-    <div style="position:absolute; top:50%; left:50%; margin-top:-10px; margin-left: -170px; width:340px; height:128px; text-align:center">
-      <br> <span style="font-size:20px">L O A D I N G <br><br> S P O G G Y <br> G R O U P</span>
-    </div>
-  </app-view>
-  <!--  <todo-view></todo-view>-->
+
+  <div id="results"></div>
+  <script>
+/*
+  runStorage( "/test-folder/test-file.ttl","<> a <#test>." ).then( ()=>{
+    runRest( "/test-folder/test-file.ttl","<> a <#test>." )
+  })*/
+
+
+  /* This runs using src/localStorage directly
+  */
+  async function runStorage(file,text){
+    const storage = new SolidLocalStorage()
+    let response = await storage.putResource( file,{body:text} )
+    response = await storage.getResource( file )
+    console.log(storage, response)
+    //  show(await response)
+  }
+
+  /* This runs using src/localStorage via transpiled version of src/rest
+  */
+  async function runRest(file,text){
+    file = "app://ls"+file
+    const rest = new SolidRest([ new SolidLocalStorage() ])
+    let response = await rest.fetch( file,{method:"PUT",body:text} )
+    response = await rest.fetch( file )
+    console.log(rest, response)
+    //  show(response.status+","+await response.text())
+  }
+  /*
+  function show(msg){
+  let display = document.getElementById("results")
+  display.innerHTML = display.innerHTML + `<p>BOO</p>`
+}*/
+</script>
+
+
+
+
+<app-view>
+  <div style="position:absolute; top:50%; left:50%; margin-top:-10px; margin-left: -170px; width:340px; height:128px; text-align:center">
+    <br> <span style="font-size:20px">L O A D I N G <br><br> S P O G G Y <br> G R O U P</span>
+  </div>
+</app-view>
+<!--  <todo-view></todo-view>-->
 </main>
 
 <footer>

@@ -28,8 +28,8 @@ class AppView extends LitElement {
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
 
     <div class="container-fluid">
-
-
+    
+    <rest-element name="REST">Loading rest</rest-element>
 
     <div class="row">
     <div class="col-md-6">

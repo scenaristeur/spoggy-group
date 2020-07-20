@@ -53,6 +53,7 @@
     "rdf-namespaces": "^1.8.0",
     "solid-auth-client": "^2.4.1",
     "solid-file-client": "^1.0.5",
+    "solid-rest": "^1.2.1",
     "tripledoc": "^4.3.4",
     "vis-network": "^7.10.0"
   }

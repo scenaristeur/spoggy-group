@@ -42,3 +42,5 @@ import './views/selected-view.js';
 import './views/sparql-view.js';
 
 //import './views/vis-tool-view.js';
+// Solid-rest
+import './views/rest-element.js'
